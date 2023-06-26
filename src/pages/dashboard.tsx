@@ -1,7 +1,8 @@
+import { UserButton, useUser } from "@clerk/nextjs";
 import Head from "next/head";
-import { SignInButton, SignUpButton } from "@clerk/nextjs";
 
-export default function Home() {
+export default function Dashboard() {
+  const { user } = useUser();
   return (
     <>
       <Head>
@@ -9,8 +10,8 @@ export default function Home() {
         <meta name="description" content="" />
       </Head>
       <main className="flex h-screen flex-col items-center justify-center">
-        <SignInButton redirectUrl="/dashboard" />
-        <SignUpButton redirectUrl="/dashboard" />
+        {user?.fullName}
+        <UserButton afterSignOutUrl="/" />
       </main>
     </>
   );
