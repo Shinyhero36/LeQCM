@@ -240,4 +240,67 @@ export const quizRouter = createTRPCRouter({
         },
       });
     }),
+  updateQuestion: privateProcedure
+    .input(
+      z.object({
+        quizId: z.string().nonempty(),
+        questionId: z.string().nonempty(),
+        question: z.string().nonempty(),
+        propositions: z
+          .object({
+            proposition: z.string().min(1).max(120),
+            isCorrect: z.boolean(),
+          })
+          .array()
+          .min(1)
+          .max(4),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const quiz = await ctx.prisma.quiz.findUnique({
+        where: {
+          id: input.quizId,
+        },
+      });
+
+      if (!quiz) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Ce quiz n'existe pas",
+        });
+      }
+
+      const question = await ctx.prisma.question.findUnique({
+        where: {
+          id: input.questionId,
+        },
+      });
+
+      if (!question) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Cette question n'existe pas",
+        });
+      }
+
+      // Delete previous question and recreate the question
+      // No need for an ID in this case
+      await ctx.prisma.question.delete({
+        where: {
+          id: input.questionId,
+        },
+      });
+
+      const newQuestion = await ctx.prisma.question.create({
+        data: {
+          quizId: input.quizId,
+          question: input.question,
+          propositions: {
+            create: input.propositions,
+          },
+        },
+      });
+
+      return newQuestion;
+    }),
 });
