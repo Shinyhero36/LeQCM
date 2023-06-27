@@ -5,12 +5,23 @@ import { useRouter } from "next/router";
 
 import { SignedIn } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PlusIcon } from "lucide-react";
+import { MoreVerticalIcon, PlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { EmptyState } from "@/components/empty-state";
 import { NavBar } from "@/components/navbar";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -19,6 +30,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Form,
   FormControl,
@@ -36,6 +53,8 @@ export default function Home() {
   const { toast } = useToast();
 
   const [openCreateModal, setOpenCreateModal] = useState(false);
+  const [openDeleteQuizModal, setOpenDeleteQuizModal] = useState(false);
+  const [quizToDelete, setQuizToDelete] = useState<string | null>(null);
 
   const { data: quizzes, isLoading } = api.quiz.getAllFromUser.useQuery();
   const ctx = api.useContext();
@@ -54,6 +73,13 @@ export default function Home() {
         });
       },
     });
+  const { mutate: deleteQuiz } = api.quiz.delete.useMutation({
+    onSuccess: async () => {
+      await ctx.quiz.getAllFromUser.invalidate();
+      setOpenDeleteQuizModal(false);
+      setQuizToDelete(null);
+    },
+  });
 
   const QuizCards = () => {
     if (isLoading)
@@ -102,31 +128,79 @@ export default function Home() {
         />
       );
     return (
-      <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {quizzes.map((quiz) => (
-          <Link href={`/editor/${quiz.id}`} key={quiz.id}>
-            <div className="flex flex-col overflow-hidden rounded-lg border shadow-md">
-              {/* Image placeholder */}
-              <div className="relative aspect-video h-full w-full bg-black">
-                {/* Question count */}
-                <div className="bg-cod-500 absolute right-0 top-0 m-4 rounded px-2 py-1">
-                  <span className="text-sm font-medium text-white">
-                    {quiz.questions.length} question
-                    {quiz.questions.length > 1 && "s"}
-                  </span>
+      <>
+        {quizToDelete && (
+          <AlertDialog
+            open={openDeleteQuizModal}
+            onOpenChange={setOpenDeleteQuizModal}
+          >
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  Êtes-vous sûr de vouloir supprimer ce quiz ?
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  Une fois supprimé il n&apos;est pas possible de faire machine
+                  arrière.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Annuler</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => deleteQuiz({ id: quizToDelete })}
+                >
+                  Oui, supprimer
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
+        <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {quizzes.map((quiz) => (
+            <div key={quiz.id}>
+              <div className="flex flex-col overflow-hidden rounded-lg border shadow-md">
+                {/* Image placeholder */}
+                <Link
+                  href={`/editor/${quiz.id}`}
+                  className="relative aspect-video h-full w-full bg-black"
+                >
+                  {/* Question count */}
+                  <div className="bg-cod-500 absolute right-0 top-0 m-4 rounded px-2 py-1">
+                    <span className="text-sm font-medium text-white">
+                      {quiz.questions.length} question
+                      {quiz.questions.length > 1 && "s"}
+                    </span>
+                  </div>
+                </Link>
+                {/* Fake info */}
+                <div className="flex justify-between px-6 py-4">
+                  <div>
+                    <h3 className="text-lg font-medium">{quiz.name}</h3>
+                    <p className="text-cod-700 text-sm">
+                      {quiz.description ?? "Pas de description"}
+                    </p>
+                  </div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger>
+                      <MoreVerticalIcon />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          setQuizToDelete(quiz.id);
+                          setOpenDeleteQuizModal(true);
+                        }}
+                      >
+                        Supprimer
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </div>
-              {/* Fake info */}
-              <div className="px-6 py-4">
-                <h3 className="text-lg font-medium">{quiz.name}</h3>
-                <p className="text-cod-700 text-sm">
-                  {quiz.description ?? "Pas de description"}
-                </p>
-              </div>
             </div>
-          </Link>
-        ))}
-      </div>
+          ))}
+        </div>
+      </>
     );
   };
 
