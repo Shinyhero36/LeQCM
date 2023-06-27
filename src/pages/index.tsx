@@ -26,22 +26,36 @@ export default function Home() {
         <meta charSet="utf-8" />
         <title>{metadata.title}</title>
         <meta name="description" content={metadata.description} />
-        <link rel="author" href={metadata.author} />
-        <meta name="creator" content={metadata.author} />
+        <link rel="author" href="https://clubinfo.insat.fr" />
+        <meta
+          name="theme-color"
+          media="(prefers-color-scheme: light)"
+          content="white"
+        />
+        <meta
+          name="theme-color"
+          media="(prefers-color-scheme: dark)"
+          content="black"
+        />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
         <meta property="og:title" content={metadata.title} />
         <meta property="og:description" content={metadata.description} />
-        <meta property="og:locale" content="en_FR" />
         <meta property="og:url" content={metadata.url} />
         <meta property="og:site_name" content={metadata.siteName} />
+        <meta property="og:locale" content="fr_FR" />
         <meta property="og:image" content={metadata.image} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
-        <meta property="og:type" content={metadata.type} />
+        <meta property="og:image:alt" content={metadata.title} />
+        <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={metadata.title} />
         <meta name="twitter:description" content={metadata.description} />
         <meta name="twitter:image" content={metadata.image} />
-        <link rel="icon" href={metadata.favicon} />
+        <link rel="shortcut icon" href="/favicon-16x16.png" />
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       </Head>
       <div className={cn("min-h-screen bg-cod-950")}>
         <header className="mx-auto max-w-7xl px-8">
