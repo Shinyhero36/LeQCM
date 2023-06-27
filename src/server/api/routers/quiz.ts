@@ -38,6 +38,21 @@ export const quizRouter = createTRPCRouter({
 
       return quiz;
     }),
+  delete: privateProcedure
+    .input(
+      z.object({
+        id: z.string().nonempty(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const quiz = await ctx.prisma.quiz.delete({
+        where: {
+          id: input.id,
+        },
+      });
+
+      return quiz;
+    }),
   getAllFromUser: privateProcedure.query(async ({ ctx }) => {
     const quizzes = await ctx.prisma.quiz.findMany({
       where: {
