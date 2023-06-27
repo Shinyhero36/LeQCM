@@ -28,10 +28,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
 import { api } from "@/utils/api";
 
 export default function Home() {
   const router = useRouter();
+  const { toast } = useToast();
 
   const [openCreateModal, setOpenCreateModal] = useState(false);
 
@@ -43,6 +45,13 @@ export default function Home() {
         await ctx.quiz.getAllFromUser.invalidate();
         setOpenCreateModal(false);
         await router.push(`/editor/${data.id}`);
+      },
+      onError: (error) => {
+        toast({
+          title: "Impossible de créer un nouveau quiz",
+          description: error.message,
+          variant: "destructive",
+        });
       },
     });
 
