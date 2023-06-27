@@ -31,7 +31,7 @@ export default function Home() {
         <meta property="og:title" content={metadata.title} />
         <meta property="og:description" content={metadata.description} />
         <meta property="og:locale" content="en_US" />
-        <meta property="og:site_name" content="shadcn/ui" />
+        <meta property="og:site_name" content={metadata.siteName} />
         <meta property="og:image" content={metadata.image} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
