@@ -2,17 +2,45 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider = "prisma-client-js"
-    previewFeatures = ["jsonProtocol"]
+  provider        = "prisma-client-js"
+  previewFeatures = ["jsonProtocol"]
 }
 
 datasource db {
-    provider = "sqlite"
-    url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
-model Example {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model Quiz {
+  id           String     @id @default(cuid())
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  creator      String
+  name         String
+  description  String?
+  questions    Question[]
+  timeToAnswer Int // in seconds
+
+  @@unique([name, creator])
+}
+
+model Question {
+  id           String        @id @default(cuid())
+  Quiz         Quiz?         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  quizId       String?
+  question     String
+  propositions Proposition[]
+
+  @@index([quizId])
+}
+
+model Proposition {
+  id          String    @id @default(cuid())
+  question    Question? @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  questionId  String?
+  proposition String
+  isCorrect   Boolean
+
+  @@index([questionId])
 }
