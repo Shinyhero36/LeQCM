@@ -30,7 +30,7 @@ export default function Home() {
         <meta name="creator" content={metadata.author} />
         <meta property="og:title" content={metadata.title} />
         <meta property="og:description" content={metadata.description} />
-        <meta property="og:locale" content="en_US" />
+        <meta property="og:locale" content="en_FR" />
         <meta property="og:site_name" content={metadata.siteName} />
         <meta property="og:image" content={metadata.image} />
         <meta property="og:image:width" content="1200" />
