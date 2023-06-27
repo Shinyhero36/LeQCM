@@ -9,4 +9,5 @@ export const metadata = {
   creator: "Gérald Leban",
   type: "website",
   generator: "Next.js",
+  url: "https://le-qcm.vercel.app",
 };

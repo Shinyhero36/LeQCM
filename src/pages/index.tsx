@@ -31,6 +31,7 @@ export default function Home() {
         <meta property="og:title" content={metadata.title} />
         <meta property="og:description" content={metadata.description} />
         <meta property="og:locale" content="en_FR" />
+        <meta property="og:url" content={metadata.url} />
         <meta property="og:site_name" content={metadata.siteName} />
         <meta property="og:image" content={metadata.image} />
         <meta property="og:image:width" content="1200" />
