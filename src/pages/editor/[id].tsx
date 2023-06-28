@@ -2,18 +2,17 @@ import { useState } from "react";
 import { type GetStaticProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
-
-import { EyeIcon, LogOutIcon, PlusIcon } from "lucide-react";
-
+import { type Proposition, type Question } from "@prisma/client";
+import { Button } from "@/components/ui/button";
 import { CreateQuestionDialog } from "@/components/create-question-dialog";
 import { EditQuestionDialog } from "@/components/edit-question-dialog";
 import { EmptyState } from "@/components/empty-state";
+import { Logo } from "@/components/logo";
 import { QuestionCard } from "@/components/question-card";
 import { QuizMetadataCard } from "@/components/quiz-metadata";
-import { Button } from "@/components/ui/button";
 import { generateSSGHelper } from "@/server/helpers/ssgHelper";
 import { api } from "@/utils/api";
-import { type Proposition, type Question } from "@prisma/client";
+import { EyeIcon, LogOutIcon, PlusIcon } from "lucide-react";
 
 export default function EditorPage({ id }: { id: string }) {
   const router = useRouter();
@@ -64,7 +63,7 @@ export default function EditorPage({ id }: { id: string }) {
         <title>LE QCM | Editor</title>
         {/* TODO: Add basic head tags */}
       </Head>
-      {quiz && (
+      {quiz && openAddQuestionForm && (
         <CreateQuestionDialog
           open={openAddQuestionForm}
           setOpen={setOpenAddQuestionForm}
@@ -81,7 +80,7 @@ export default function EditorPage({ id }: { id: string }) {
       )}
       <div className="min-h-screen">
         <nav className="min-h-16 fixed z-40 flex w-full items-center justify-between border-b bg-white p-4">
-          <p className="text-3xl font-semibold">LE QCM</p>
+          <Logo theme="light" />
           <div className="flex space-x-2">
             <Button variant="outline" className="gap-2">
               <EyeIcon className="h-5 w-5" />

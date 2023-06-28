@@ -1,11 +1,10 @@
 import { Merriweather_Sans, Mukta_Vaani } from "next/font/google";
-import { Head } from "@/components/head";
 import Image from "next/image";
 import Link from "next/link";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
+import { Head } from "@/components/head";
 import { Logo } from "@/components/logo";
-import { metadata } from "@/config";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 

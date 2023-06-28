@@ -2,15 +2,7 @@ import { useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-
 import { SignedIn } from "@clerk/nextjs";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { MoreVerticalIcon, PlusIcon } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-import { EmptyState } from "@/components/empty-state";
-import { NavBar } from "@/components/navbar";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,7 +12,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
@@ -46,7 +37,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
+import { EmptyState } from "@/components/empty-state";
+import { NavBar } from "@/components/navbar";
 import { api } from "@/utils/api";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { MoreVerticalIcon, PlusIcon } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 export default function Home() {
   const router = useRouter();
@@ -165,7 +162,7 @@ export default function Home() {
                   className="relative aspect-video h-full w-full bg-black"
                 >
                   {/* Question count */}
-                  <div className="bg-cod-500 absolute right-0 top-0 m-4 rounded px-2 py-1">
+                  <div className="absolute right-0 top-0 m-4 rounded bg-cod-500 px-2 py-1">
                     <span className="text-sm font-medium text-white">
                       {quiz.questions.length} question
                       {quiz.questions.length > 1 && "s"}
@@ -176,7 +173,7 @@ export default function Home() {
                 <div className="flex justify-between px-6 py-4">
                   <div>
                     <h3 className="text-lg font-medium">{quiz.name}</h3>
-                    <p className="text-cod-700 text-sm">
+                    <p className="text-sm text-cod-700">
                       {quiz.description ?? "Pas de description"}
                     </p>
                   </div>

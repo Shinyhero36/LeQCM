@@ -6,7 +6,7 @@ export const NavBar = () => {
       <div className="mx-auto max-w-7xl px-5 py-4 sm:px-10">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <p className="text-3xl text-black">Le QCM</p>
+            <p className="text-xl text-black">Le QCM</p>
           </div>
           <SignedIn>
             <UserButton showName afterSignOutUrl="/" />
