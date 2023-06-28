@@ -1,8 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Trash2Icon } from "lucide-react";
-import { useFieldArray, useForm } from "react-hook-form";
-import { z } from "zod";
-
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -23,6 +18,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { api } from "@/utils/api";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Trash2Icon } from "lucide-react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { z } from "zod";
 
 interface CreateQuestionDialogProps {
   open: boolean;
@@ -69,13 +68,7 @@ export const CreateQuestionDialog = ({
     onSuccess: async () => {
       await ctx.quiz.getFromUser.invalidate({ id: quizId });
       setOpen(false);
-      form.reset({
-        propositions: Array(2).fill({
-          proposition: "",
-          isCorrect: false,
-        }),
-        question: "",
-      });
+      form.reset();
     },
   });
 
