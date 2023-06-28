@@ -1,5 +1,5 @@
 import { Merriweather_Sans, Mukta_Vaani } from "next/font/google";
-import Head from "next/head";
+import { Head } from "@/components/head";
 import Image from "next/image";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
@@ -7,7 +7,6 @@ import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { metadata } from "@/config";
 
 const merriweatherSans = Merriweather_Sans({
   subsets: ["latin"],
@@ -22,41 +21,7 @@ export default function Home() {
   const year = new Date().getFullYear();
   return (
     <>
-      <Head>
-        <meta charSet="utf-8" />
-        <title>{metadata.title}</title>
-        <meta name="description" content={metadata.description} />
-        <link rel="author" href="https://clubinfo.insat.fr" />
-        <meta
-          name="theme-color"
-          media="(prefers-color-scheme: light)"
-          content="white"
-        />
-        <meta
-          name="theme-color"
-          media="(prefers-color-scheme: dark)"
-          content="black"
-        />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-        <meta property="og:title" content={metadata.title} />
-        <meta property="og:description" content={metadata.description} />
-        <meta property="og:url" content={metadata.url} />
-        <meta property="og:site_name" content={metadata.siteName} />
-        <meta property="og:locale" content="fr_FR" />
-        <meta property="og:image" content={metadata.image} />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:alt" content={metadata.title} />
-        <meta property="og:type" content="website" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={metadata.title} />
-        <meta name="twitter:description" content={metadata.description} />
-        <meta name="twitter:image" content={metadata.image} />
-        <link rel="shortcut icon" href="/favicon-16x16.png" />
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-      </Head>
+      <Head />
       <div className={cn("min-h-screen bg-cod-950")}>
         <header className="mx-auto max-w-7xl px-8">
           <div className="flex items-center justify-between py-8">
