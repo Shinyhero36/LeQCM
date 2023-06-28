@@ -6,12 +6,12 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
-import { TRPCError, initTRPC } from "@trpc/server";
+import { getAuth } from "@clerk/nextjs/server";
+import { prisma } from "@/server/db";
+import { initTRPC, TRPCError } from "@trpc/server";
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 import superjson from "superjson";
 import { ZodError } from "zod";
-import { prisma } from "@/server/db";
-import { getAuth } from "@clerk/nextjs/server";
 
 /**
  * This is the actual context you will use in your router. It will be used to process every request

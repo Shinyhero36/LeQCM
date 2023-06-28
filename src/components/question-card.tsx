@@ -1,9 +1,8 @@
 import { type Proposition, type Question } from "@prisma/client";
-import { CopyIcon, PencilIcon, Trash2Icon } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { api } from "@/utils/api";
+import { CopyIcon, PencilIcon, Trash2Icon } from "lucide-react";
 
 interface QuestionCardProps {
   quizId: string;

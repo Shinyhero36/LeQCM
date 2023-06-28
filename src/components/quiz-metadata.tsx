@@ -1,9 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { type Quiz } from "@prisma/client";
-import { TimerIcon } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -22,6 +17,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { api } from "@/utils/api";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { TimerIcon } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 interface QuizMetadataCardProps {
   quiz: Quiz;
