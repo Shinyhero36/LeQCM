@@ -1,5 +1,4 @@
 import React from "react";
-
 import { cn } from "@/lib/utils";
 
 interface EmptyStateProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -22,7 +21,7 @@ export const EmptyState = ({
     >
       <div className="space-y-3 text-center">
         <h2 className="text-3xl font-medium">{title}</h2>
-        <p className="text-cod-700 text-sm">{description}</p>
+        <p className="text-sm text-cod-700">{description}</p>
       </div>
       {actions && <div className="flex gap-3">{actions}</div>}
     </div>
