@@ -2,8 +2,7 @@ export const metadata = {
   locale: "fr_FR",
   siteName: "Le qcm",
   title: "Le QCM | INSA Toulouse",
-  description:
-    "Le qcm est une plateforme qui vous permet de créer des quiz interactifs en compléments de vos présentations et vos cours.",
+  description: "Créez des quiz interactifs pour vos cours et présentations pour tester les connaissances de votre audience",
   image: "/api/og",
   author: {
     name: "Club Info INSA Toulouse",

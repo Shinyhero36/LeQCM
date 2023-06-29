@@ -12,18 +12,18 @@ module.exports = {
     },
     extend: {
       colors: {
-        cod: {
-          "50": "#f7f7f7",
-          "100": "#e3e3e3",
-          "200": "#c8c8c8",
-          "300": "#a4a4a4",
-          "400": "#818181",
-          "500": "#666666",
-          "600": "#515151",
-          "700": "#434343",
-          "800": "#383838",
-          "900": "#313131",
-          "950": "#1b1b1b",
+        turquoise: {
+          "50": "#f0fdfc",
+          "100": "#cbfcf8",
+          "200": "#98f7f2",
+          "300": "#5cece9",
+          "400": "#28cdcf",
+          "500": "#12b5ba",
+          "600": "#0b9096",
+          "700": "#0e7177",
+          "800": "#10595f",
+          "900": "#124b4f",
+          "950": "#032c30",
         },
         perano: {
           50: "#f0f2fd",
@@ -90,6 +90,14 @@ module.exports = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+      },
+      fontSize: {
+        "7.5xl": [
+          "80px",
+          {
+            lineHeight: "80px",
+          },
+        ],
       },
     },
   },
