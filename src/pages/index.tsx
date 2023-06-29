@@ -1,155 +1,104 @@
-import { Merriweather_Sans, Mukta_Vaani } from "next/font/google";
-import Image from "next/image";
+import { Outfit } from "next/font/google";
 import Link from "next/link";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
-import { Button } from "@/components/ui/button";
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Head } from "@/components/head";
 import { Logo } from "@/components/logo";
+import { Phone } from "@/components/phone";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { ExternalLinkIcon } from "lucide-react";
 
-const merriweatherSans = Merriweather_Sans({
+const outfit = Outfit({
   subsets: ["latin"],
-});
-
-const muktaVaani = Mukta_Vaani({
-  subsets: ["latin"],
-  weight: ["400"],
 });
 
 export default function Home() {
   const year = new Date().getFullYear();
+
   return (
     <>
       <Head />
-      <div className={cn("min-h-screen bg-cod-950")}>
-        <header className="mx-auto max-w-7xl px-8">
-          <div className="flex items-center justify-between py-8">
-            <Logo theme="dark" />
+      <div className={cn("min-h-screen", outfit.className)}>
+        <header className="flex items-center justify-between p-5">
+          <Logo theme="light" />
+          <nav className="flex items-center space-x-7">
+            <Link
+              href="https://clubinfo.insat.fr"
+              target="_blank"
+              className="hidden gap-2 text-lg font-medium hover:text-turquoise-600 md:inline-flex"
+            >
+              <span>Club Info INSA Toulouse</span>
+              <ExternalLinkIcon className="h-4 w-4" />
+            </Link>
             <SignedIn>
-              <UserButton
-                showName
-                appearance={{
-                  elements: {
-                    //
-                    userButtonOuterIdentifier: {
-                      color: "white",
-                    },
-                  },
-                }}
-              />
+              <UserButton />
             </SignedIn>
             <SignedOut>
-              <SignInButton redirectUrl="/dashboard">
-                <Button>Se connecter</Button>
-              </SignInButton>
+              <Link
+                href="#"
+                className="rounded-lg bg-turquoise-400 px-4 py-2 text-lg font-medium text-white hover:bg-turquoise-500"
+              >
+                Créer un quiz
+              </Link>
             </SignedOut>
-          </div>
+          </nav>
         </header>
-        <main className="mx-auto max-w-7xl px-5 py-6 sm:px-10 sm:py-32">
-          <div className="space-y-16 lg:grid lg:grid-cols-12 lg:space-x-8 lg:space-y-0">
-            <div className="col-span-8 space-y-6 lg:space-y-12">
-              <motion.p
-                initial={{
-                  y: 100,
-                  opacity: 0,
-                }}
-                animate={{
-                  y: 0,
-                  opacity: 1,
-                }}
-                transition={{
-                  delay: 0,
-                  duration: 0.2,
-                }}
-                className={`font-semibold uppercase tracking-wide text-perano-400`}
-              >
-                En cours de développement
-              </motion.p>
-              <motion.h1
-                initial={{
-                  y: 100,
-                  opacity: 0,
-                }}
-                animate={{
-                  y: 0,
-                  opacity: 1,
-                }}
-                transition={{
-                  delay: 0.2,
-                  duration: 0.5,
-                }}
-                className={`max-w-4xl text-4xl font-extrabold leading-none text-white sm:text-5xl lg:text-7xl ${merriweatherSans.className}`}
-              >
-                Une moyen <span className="text-perano-400">ludique</span> de
-                tester les{" "}
-                <span className="text-perano-400">connaissances</span> de votre
-                audience
-              </motion.h1>
-              <motion.p
-                initial={{
-                  y: 100,
-                  opacity: 0,
-                }}
-                animate={{
-                  y: 0,
-                  opacity: 1,
-                }}
-                transition={{
-                  delay: 0.4,
-                  duration: 0.5,
-                }}
-                className={`max-w-2xl text-xl text-gray-400 sm:text-2xl ${muktaVaani.className}`}
-              >
-                Le qcm est une plateforme qui vous permet de créer des quiz
-                interactifs en compléments de vos présentations et vos cours.
-              </motion.p>
-              <motion.div
-                initial={{
-                  y: 100,
-                  opacity: 0,
-                }}
-                animate={{
-                  y: 0,
-                  opacity: 1,
-                }}
-                transition={{
-                  delay: 0.6,
-                  duration: 0.5,
-                }}
-                className="flex space-x-4"
-              >
-                <button className="rounded-md bg-perano-400 px-4 py-3 text-center font-semibold text-white transition-colors hover:bg-perano-500 lg:px-8 lg:py-4 lg:text-lg">
-                  Rejoindre la beta
-                </button>
-              </motion.div>
-            </div>
+        <main className="mx-auto max-w-7xl">
+          <section className="flex flex-col items-center justify-center gap-16 px-5 py-20 md:px-24 md:py-24">
             <motion.div
               initial={{
-                x: 100,
                 opacity: 0,
+                y: 100,
               }}
               animate={{
-                x: 0,
                 opacity: 1,
+                y: 0,
               }}
               transition={{
-                delay: 0.6,
                 duration: 0.5,
+                delay: 0.5,
               }}
-              className="relative hidden justify-center sm:flex lg:col-span-4 lg:justify-start"
+              className="max-w-3xl space-y-6 text-center"
             >
-              <Image
-                className="shadow-perano-300 drop-shadow-lg filter"
-                src="/images/phone.png"
-                width={300}
-                height={607}
-                alt="Preview"
-              />
+              <h1 className="text-5xl font-semibold md:text-7.5xl">
+                Tester les{" "}
+                <span className="text-perano-500">connaissances</span> de votre{" "}
+                <span className="text-perano-500">audience.</span>
+              </h1>
+              <p className="text-xl text-gray-500 md:text-3xl">
+                Créez des quiz interactifs pour vos cours et présentations.
+              </p>
+              <div className="flex justify-center gap-2">
+                <Link
+                  href="#"
+                  className="inline-block rounded-lg bg-turquoise-400 px-4 py-3 text-lg font-medium text-white hover:bg-turquoise-500"
+                >
+                  Créer un quiz
+                </Link>
+              </div>
             </motion.div>
-          </div>
+            <motion.div
+              initial={{
+                opacity: 0,
+                y: 250,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+              }}
+              transition={{
+                duration: 0.5,
+                delay: 0,
+              }}
+            >
+              <Phone>
+                {/* TODO: Animate phone screen */}
+                <div className="h-full w-full rounded-[37px] bg-white"></div>
+              </Phone>
+            </motion.div>
+          </section>
         </main>
-        <footer className="mx-auto max-w-7xl px-8 py-12 text-white">
+        <footer className="mx-auto max-w-7xl px-8 py-12">
           <div className="flex flex-col justify-between md:flex-row md:items-center">
             <p>© {year} Le qcm</p>
             <p>
@@ -157,7 +106,7 @@ export default function Home() {
               <Link
                 href="https://clubinfo.insat.fr"
                 target="_blank"
-                className="underline underline-offset-4"
+                className="underline underline-offset-4 hover:text-turquoise-600"
               >
                 Club Info
               </Link>

@@ -11,7 +11,7 @@ export const Logo = ({ theme = "light" }: { theme: Theme }) => (
       })}
     />
     <p
-      className={cn("text-xl", {
+      className={cn("text-xl font-medium", {
         "text-black": theme === "light",
         "text-white": theme === "dark",
       })}
