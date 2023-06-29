@@ -73,7 +73,7 @@ export default function Home() {
                   href="#"
                   className="inline-block rounded-lg bg-turquoise-400 px-4 py-3 text-lg font-medium text-white hover:bg-turquoise-500"
                 >
-                  Get started
+                  Créer un quiz
                 </Link>
               </div>
             </motion.div>
