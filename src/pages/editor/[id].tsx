@@ -88,7 +88,7 @@ export default function EditorPage({ id }: { id: string }) {
             </Button>
             <Button className="gap-2" onClick={goBackToDashboard}>
               <LogOutIcon className="h-5 w-5" />
-              <span>Quitter</span>
+              <span>Dashboard</span>
             </Button>
           </div>
         </nav>
