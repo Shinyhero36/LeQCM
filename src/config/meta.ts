@@ -4,7 +4,7 @@ export const metadata = {
   title: "Le QCM | INSA Toulouse",
   description:
     "Créez des quiz interactifs pour vos cours et présentations pour tester les connaissances de votre audience",
-  image: new URL("/api/og", import.meta.url),
+  image: new URL("/api/og", import.meta.url).toString(),
   author: {
     name: "Club Info INSA Toulouse",
     url: "https://clubinfo.insat.fr",
