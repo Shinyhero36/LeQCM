@@ -1,0 +1,7 @@
+User-Agent: *
+
+Dissallow: /dashboard
+Dissallow: /editor/*
+
+
+Allow: /api/og/*
