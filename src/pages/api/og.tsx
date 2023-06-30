@@ -11,7 +11,7 @@ const og = () => {
       <div tw="flex flex-col w-full h-full justify-between bg-white border-[15px] border-black p-[65px]">
         <div tw="flex flex-col">
           <div tw="flex">
-            <p tw="text-4xl border-b-[5px] border-black pb-2 w-fit">Le QCM</p>
+            <p tw="text-4xl border-b-[5px] border-black pb-2">Le QCM</p>
           </div>
           <h1 tw="text-7xl font-semibold">
             Créez des quiz interactifs pour vos cours et présentations.
