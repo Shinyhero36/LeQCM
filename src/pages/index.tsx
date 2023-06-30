@@ -31,7 +31,7 @@ export default function Home() {
               <ExternalLinkIcon className="h-4 w-4" />
             </Link>
             <SignedIn>
-              <UserButton />
+              <UserButton afterSignOutUrl="/" />
             </SignedIn>
             <SignedOut>
               <Link
