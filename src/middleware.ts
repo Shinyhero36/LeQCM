@@ -3,7 +3,7 @@ import { authMiddleware, redirectToSignIn } from "@clerk/nextjs";
 
 export default authMiddleware({
   publicRoutes: ["/", "/api/og", "/favicon.ico"],
-  afterAuth(auth, req, evt) {
+  afterAuth(auth, req, _evt) {
     // Handle public routes
     if (auth.isPublicRoute) {
       return NextResponse.next();
