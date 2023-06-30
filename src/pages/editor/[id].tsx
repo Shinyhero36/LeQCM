@@ -12,7 +12,7 @@ import { QuestionCard } from "@/components/question-card";
 import { QuizMetadataCard } from "@/components/quiz-metadata";
 import { generateSSGHelper } from "@/server/helpers/ssgHelper";
 import { api } from "@/utils/api";
-import { EyeIcon, LogOutIcon, PlusIcon } from "lucide-react";
+import { LogOutIcon, PlusIcon } from "lucide-react";
 
 export default function EditorPage({ id }: { id: string }) {
   const router = useRouter();
@@ -81,16 +81,10 @@ export default function EditorPage({ id }: { id: string }) {
       <div className="min-h-screen">
         <nav className="min-h-16 fixed z-40 flex w-full items-center justify-between border-b bg-white p-4">
           <Logo theme="light" />
-          <div className="flex space-x-2">
-            <Button variant="outline" className="gap-2">
-              <EyeIcon className="h-5 w-5" />
-              <span>Prévisualiser</span>
-            </Button>
-            <Button className="gap-2" onClick={goBackToDashboard}>
-              <LogOutIcon className="h-5 w-5" />
-              <span>Dashboard</span>
-            </Button>
-          </div>
+          <Button className="gap-2" onClick={goBackToDashboard}>
+            <LogOutIcon className="h-5 w-5" />
+            <span>Dashboard</span>
+          </Button>
         </nav>
         <main className="mx-auto max-w-7xl px-5 py-6 pt-24 sm:px-10">
           <div className="grid gap-5 lg:grid-cols-12">
