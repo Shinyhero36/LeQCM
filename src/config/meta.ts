@@ -3,7 +3,7 @@ export const metadata = {
   siteName: "Le qcm",
   title: "Le QCM | INSA Toulouse",
   description: "Créez des quiz interactifs pour vos cours et présentations",
-  image: "/api/og",
+  image: "/images/og.png",
   author: {
     name: "Club Info INSA Toulouse",
     url: "https://clubinfo.insat.fr",
