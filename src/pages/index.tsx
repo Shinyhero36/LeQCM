@@ -35,7 +35,7 @@ export default function Home() {
             </SignedIn>
             <SignedOut>
               <Link
-                href="#"
+                href="/dashboard"
                 className="rounded-lg bg-turquoise-400 px-4 py-2 text-lg font-medium text-white hover:bg-turquoise-500"
               >
                 Créer un quiz
@@ -70,7 +70,7 @@ export default function Home() {
               </p>
               <div className="flex justify-center gap-2">
                 <Link
-                  href="#"
+                  href="/dashboard"
                   className="inline-block rounded-lg bg-turquoise-400 px-4 py-3 text-lg font-medium text-white hover:bg-turquoise-500"
                 >
                   Créer un quiz
