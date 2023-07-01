@@ -1,10 +1,13 @@
 import { Outfit } from "next/font/google";
 import Link from "next/link";
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
 import { Head } from "@/components/head";
 import { Logo } from "@/components/logo";
 import { Phone } from "@/components/phone";
 import { cn } from "@/lib/utils";
+import { api } from "@/utils/api";
 import { motion } from "framer-motion";
 import { ExternalLinkIcon } from "lucide-react";
 
@@ -14,6 +17,25 @@ const outfit = Outfit({
 
 export default function Home() {
   const year = new Date().getFullYear();
+  const { toast } = useToast();
+  const { user } = useUser();
+
+  const { mutate: joinWaitlist } = api.waitlist.join.useMutation({
+    onSuccess: () => {
+      toast({
+        title: "Vous avez été ajouté",
+        description:
+          "Vous recevrez un email lorsque que vous pourrez accéder à l'alpha.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Une erreur est survenue",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
 
   return (
     <>
@@ -33,14 +55,7 @@ export default function Home() {
             <SignedIn>
               <UserButton afterSignOutUrl="/" />
             </SignedIn>
-            <SignedOut>
-              <Link
-                href="#"
-                className="rounded-lg bg-turquoise-400 px-4 py-2 text-lg font-medium text-white hover:bg-turquoise-500"
-              >
-                Créer un quiz
-              </Link>
-            </SignedOut>
+            <SignedOut></SignedOut>
           </nav>
         </header>
         <main className="mx-auto max-w-7xl">
@@ -68,14 +83,37 @@ export default function Home() {
               <p className="text-xl text-gray-500 md:text-3xl">
                 Créez des quiz interactifs pour vos cours et présentations.
               </p>
-              <div className="flex justify-center gap-2">
+              <SignedIn>
+                <Button
+                  onClick={() => {
+                    if (user && user.primaryEmailAddress) {
+                      // joinWaitlist(user.primaryEmailAddress.emailAddress);
+                      // console.log(user.primaryEmailAddress.emailAddress);
+                      joinWaitlist("gerald.leban0@gmail.com");
+                    }
+                  }}
+                  type="submit"
+                  className="h-auto shrink-0 rounded-lg bg-turquoise-400 px-4 py-3 text-lg font-medium text-white hover:bg-turquoise-500"
+                >
+                  Rejoindre l&apos;alpha
+                </Button>
+              </SignedIn>
+              <SignedOut>
+                <Link
+                  href="/dashboard"
+                  className="inline-block rounded-lg bg-turquoise-400 px-4 py-3 text-lg font-medium text-white hover:bg-turquoise-500"
+                >
+                  Créer un quiz
+                </Link>
+              </SignedOut>
+              {/* <div className="flex justify-center gap-2">
                 <Link
                   href="#"
                   className="inline-block rounded-lg bg-turquoise-400 px-4 py-3 text-lg font-medium text-white hover:bg-turquoise-500"
                 >
                   Créer un quiz
                 </Link>
-              </div>
+              </div> */}
             </motion.div>
             <motion.div
               initial={{

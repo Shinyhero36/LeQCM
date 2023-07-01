@@ -12,6 +12,12 @@ datasource db {
   relationMode = "prisma"
 }
 
+model Waitlist {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  email     String   @unique
+}
+
 model Quiz {
   id           String     @id @default(cuid())
   createdAt    DateTime   @default(now())

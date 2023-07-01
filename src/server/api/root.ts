@@ -1,4 +1,5 @@
 import { quizRouter } from "@/server/api/routers/quiz";
+import { waitlistRouter } from "@/server/api/routers/waitlist";
 import { createTRPCRouter } from "@/server/api/trpc";
 
 /**
@@ -8,6 +9,7 @@ import { createTRPCRouter } from "@/server/api/trpc";
  */
 export const appRouter = createTRPCRouter({
   quiz: quizRouter,
+  waitlist: waitlistRouter,
 });
 
 // export type definition of API
