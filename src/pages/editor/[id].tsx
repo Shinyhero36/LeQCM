@@ -89,12 +89,22 @@ export default function EditorPage({ id }: { id: string }) {
         <main className="mx-auto max-w-7xl px-5 py-6 pt-24 sm:px-10">
           <div className="grid gap-5 lg:grid-cols-12">
             <div className="col-span-8">
-              <div className="mb-5 flex items-center justify-between">
+              <div className="mb-5 items-center justify-between sm:flex">
                 <h1 className="text-3xl font-semibold">
                   {quiz?.questions.length} question
                   {quiz?.questions.length > 1 && "s"}
                 </h1>
-                <Button onClick={() => setOpenAddQuestionForm(true)}>
+                <Button
+                  variant="outline"
+                  onClick={() => setOpenMetaForm(true)}
+                  className="mt-4 w-full sm:mt-0 sm:hidden sm:w-auto"
+                >
+                  <span>Paramètres</span>
+                </Button>
+                <Button
+                  onClick={() => setOpenAddQuestionForm(true)}
+                  className="mt-2 w-full sm:mt-0 sm:w-auto"
+                >
                   <PlusIcon className="h-5 w-5" />
                   <span>Ajouter une question</span>
                 </Button>

@@ -40,11 +40,11 @@ export const QuestionCard = ({
         <div className="space-x-2">
           <Button
             variant="outline"
-            className="gap-2"
+            className="w-9 gap-2 p-0 sm:w-auto sm:px-4"
             onClick={() => onEdit(question)}
           >
             <PencilIcon className="h-5 w-5" />
-            <span>Modifier</span>
+            <span className="hidden sm:block sm:w-auto">Modifier</span>
           </Button>
           <Button
             variant="outline"
