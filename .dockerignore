@@ -1,0 +1,13 @@
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Node dependencies
+node_modules
+
+# Environment variables
+# .env
+
+# Next.js build artifacts
+.next
