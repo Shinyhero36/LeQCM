@@ -22,8 +22,9 @@ export default authMiddleware({
         return NextResponse.next();
 
       // TODO: Replace with "/invite" and create the page
-      const inviteURL = new URL("/", new URL(req.url).origin);
-      return NextResponse.redirect(inviteURL);
+      const url = req.nextUrl.clone();
+      url.pathname = "/";
+      return NextResponse.redirect(url);
     }
   },
 });
