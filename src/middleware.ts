@@ -8,7 +8,7 @@ type PublicMetadata = {
 
 export default authMiddleware({
   publicRoutes: ["/", "/og.png"],
-  async afterAuth(auth, req) {
+  afterAuth(auth, req) {
     console.log("BASE URL", req.url);
     if (auth.isPublicRoute) return NextResponse.next();
 
