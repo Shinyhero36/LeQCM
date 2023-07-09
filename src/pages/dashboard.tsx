@@ -38,6 +38,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { EmptyState } from "@/components/empty-state";
+import { LoadingState } from "@/components/loading-state";
 import { NavBar } from "@/components/navbar";
 import { api } from "@/utils/api";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -79,31 +80,7 @@ export default function Home() {
   });
 
   const QuizCards = () => {
-    if (isLoading)
-      return (
-        <div className="flex h-96 flex-col items-center justify-center">
-          <svg
-            className="h-10 w-10 animate-spin"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            ></circle>
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-            ></path>
-          </svg>
-        </div>
-      );
+    if (isLoading) return <LoadingState />;
     if (!quizzes || quizzes.length === 0)
       return (
         <EmptyState
@@ -162,7 +139,7 @@ export default function Home() {
                   className="relative aspect-video h-full w-full bg-black"
                 >
                   {/* Question count */}
-                  <div className="absolute right-0 top-0 m-4 rounded bg-cod-500 px-2 py-1">
+                  <div className="bg-cod-500 absolute right-0 top-0 m-4 rounded px-2 py-1">
                     <span className="text-sm font-medium text-white">
                       {quiz.questions.length} question
                       {quiz.questions.length > 1 && "s"}
@@ -173,7 +150,7 @@ export default function Home() {
                 <div className="flex justify-between px-6 py-4">
                   <div>
                     <h3 className="text-lg font-medium">{quiz.name}</h3>
-                    <p className="text-sm text-cod-700">
+                    <p className="text-cod-700 text-sm">
                       {quiz.description ?? "Pas de description"}
                     </p>
                   </div>
