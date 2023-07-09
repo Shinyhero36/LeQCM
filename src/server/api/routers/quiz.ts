@@ -2,6 +2,8 @@ import { createTRPCRouter, privateProcedure } from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+const MAX_QUESTION_NUMBER = 999;
+
 export const quizRouter = createTRPCRouter({
   create: privateProcedure
     .input(
@@ -85,6 +87,9 @@ export const quizRouter = createTRPCRouter({
             include: {
               propositions: true,
             },
+            orderBy: {
+              order: "asc",
+            },
           },
         },
       });
@@ -141,6 +146,13 @@ export const quizRouter = createTRPCRouter({
         where: {
           id: input.quizId,
         },
+        include: {
+          questions: {
+            select: {
+              id: true,
+            },
+          },
+        },
       });
 
       if (!quiz) {
@@ -157,6 +169,7 @@ export const quizRouter = createTRPCRouter({
           propositions: {
             create: input.propositions,
           },
+          order: quiz.questions.length,
         },
       });
 
@@ -173,6 +186,13 @@ export const quizRouter = createTRPCRouter({
       const quiz = await ctx.prisma.quiz.findUnique({
         where: {
           id: input.quizId,
+        },
+        include: {
+          questions: {
+            select: {
+              id: true,
+            },
+          },
         },
       });
 
@@ -209,6 +229,7 @@ export const quizRouter = createTRPCRouter({
               isCorrect: proposition.isCorrect,
             })),
           },
+          order: quiz.questions.length,
         },
       });
 
@@ -225,6 +246,13 @@ export const quizRouter = createTRPCRouter({
       const quiz = await ctx.prisma.quiz.findUnique({
         where: {
           id: input.quizId,
+        },
+        include: {
+          questions: {
+            select: {
+              id: true,
+            },
+          },
         },
       });
 
@@ -248,9 +276,24 @@ export const quizRouter = createTRPCRouter({
         });
       }
 
+      // Delete question and update order of other questions
       await ctx.prisma.question.delete({
         where: {
           id: input.questionId,
+        },
+      });
+
+      await ctx.prisma.question.updateMany({
+        where: {
+          quizId: input.quizId,
+          order: {
+            gt: question.order,
+          },
+        },
+        data: {
+          order: {
+            decrement: 1,
+          },
         },
       });
     }),
@@ -312,9 +355,78 @@ export const quizRouter = createTRPCRouter({
           propositions: {
             create: input.propositions,
           },
+          order: question.order,
         },
       });
 
       return newQuestion;
+    }),
+  updateQuestionsOrder: privateProcedure
+    .input(
+      z.object({
+        quizId: z.string().nonempty(),
+        questions: z
+          .object({
+            id: z.string().nonempty(),
+            order: z.number(),
+          })
+          .array()
+          .min(1),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const quiz = await ctx.prisma.quiz.findUnique({
+        where: {
+          id: input.quizId,
+        },
+      });
+
+      if (!quiz) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Ce quiz n'existe pas",
+        });
+      }
+
+      const questions = await ctx.prisma.question.findMany({
+        where: {
+          quizId: input.quizId,
+        },
+      });
+
+      if (questions.length !== input.questions.length) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Le nombre de questions ne correspond pas",
+        });
+      }
+
+      // Update questions order a first time to max value to avoid unique constraint error
+      await Promise.all(
+        questions.map((question, index) =>
+          ctx.prisma.question.update({
+            where: {
+              id: question.id,
+            },
+            data: {
+              order: MAX_QUESTION_NUMBER * 2 - index,
+            },
+          })
+        )
+      );
+
+      // Update questions order
+      await Promise.all(
+        input.questions.map((question) =>
+          ctx.prisma.question.update({
+            where: {
+              id: question.id,
+            },
+            data: {
+              order: question.order,
+            },
+          })
+        )
+      );
     }),
 });

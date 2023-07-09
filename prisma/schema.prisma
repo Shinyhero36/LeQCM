@@ -31,7 +31,9 @@ model Question {
   quizId       String?
   question     String
   propositions Proposition[]
+  order        Int
 
+  @@unique([quizId, order]) // order is unique per quiz
   @@index([quizId])
 }
 
