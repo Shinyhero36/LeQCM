@@ -22,6 +22,8 @@ type FullQuestion = Question & {
   propositions: Proposition[];
 };
 
+const MAX_QUESTIONS = 999;
+
 export default function EditorPage({ id }: { id: string }) {
   const router = useRouter();
   const { toast } = useToast();
@@ -153,7 +155,15 @@ export default function EditorPage({ id }: { id: string }) {
             <Button
               variant="outline"
               size={"lg"}
-              onClick={() => setOpenAddQuestionForm(true)}
+              onClick={() => {
+                if (quiz.questions.length < MAX_QUESTIONS)
+                  setOpenAddQuestionForm(true);
+                else
+                  toast({
+                    title: "Limite atteinte",
+                    description: `Vous avez atteint la limite de ${MAX_QUESTIONS} questions`,
+                  });
+              }}
             >
               <PlusIcon className="h-5 w-5" />
               <span>Ajouter une question</span>
