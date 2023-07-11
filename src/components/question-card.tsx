@@ -34,7 +34,7 @@ export const QuestionCard = ({
   });
 
   return (
-    <div className="overflow-hidden rounded-lg border">
+    <div className="overflow-hidden rounded-lg border bg-white">
       <div className="flex items-center justify-between bg-gray-50 px-4 py-3">
         <p className="font-medium">Question {index + 1}</p>
         <div className="space-x-2">
