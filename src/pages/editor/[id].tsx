@@ -280,8 +280,11 @@ export default function EditorPage({ id }: { id: string }) {
                       </Button>
                     )}
                     <Link
-                      href={`/play/${id}`}
-                      className={cn(buttonVariants(), "lg:hidden")}
+                      href={quiz.questions.length > 0 ? `/play/${id}` : "#"}
+                      className={cn(buttonVariants(), "lg:hidden", {
+                        "cursor-not-allowed opacity-50":
+                          quiz.questions.length === 0,
+                      })}
                     >
                       Lancer une partie
                     </Link>
@@ -297,6 +300,7 @@ export default function EditorPage({ id }: { id: string }) {
                   quiz={quiz}
                   open={openMetaForm}
                   setOpen={setOpenMetaForm}
+                  startable={quiz.questions.length > 0}
                 />
               )}
             </div>

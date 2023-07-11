@@ -28,12 +28,14 @@ interface QuizMetadataCardProps {
   quiz: Quiz;
   open: boolean;
   setOpen(open: boolean): void;
+  startable: boolean;
 }
 
 export const QuizMetadataCard = ({
   quiz,
   open,
   setOpen,
+  startable,
 }: QuizMetadataCardProps) => {
   const formSchema = z.object({
     name: z.string().nonempty("Le titre ne peux pas être vide").max(50, {
@@ -194,7 +196,9 @@ export const QuizMetadataCard = ({
       <div className="px-6 pb-6">
         <Link
           href={`/play/${quiz.id}`}
-          className={cn(buttonVariants(), "w-full")}
+          className={cn(buttonVariants(), "w-full", {
+            "pointer-events-none opacity-50": !startable,
+          })}
         >
           Lancer une partie
         </Link>
