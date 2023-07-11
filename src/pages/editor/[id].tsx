@@ -270,6 +270,7 @@ export default function EditorPage({ id }: { id: string }) {
                     <Button
                       onClick={() => setReorderMode(!reorderMode)}
                       className="mt-2 w-full sm:mt-0 sm:w-auto"
+                      disabled={quiz.questions.length < 2}
                     >
                       <PlusIcon className="mr-2 h-5 w-5" />
                       <span>Modifier l&apos;ordre des questions</span>
