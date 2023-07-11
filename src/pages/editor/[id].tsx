@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { type GetStaticProps } from "next";
 import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type Proposition, type Question } from "@prisma/client";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { CreateQuestionDialog } from "@/components/create-question-dialog";
 import { EditQuestionDialog } from "@/components/edit-question-dialog";
@@ -13,6 +14,7 @@ import { Logo } from "@/components/logo";
 import { QuestionCard } from "@/components/question-card";
 import { QuestionDndCard } from "@/components/question-dnd-card";
 import { QuizMetadataCard } from "@/components/quiz-metadata";
+import { cn } from "@/lib/utils";
 import { generateSSGHelper } from "@/server/helpers/ssgHelper";
 import { api } from "@/utils/api";
 import { LogOutIcon, PlusIcon, SaveIcon } from "lucide-react";
@@ -232,50 +234,58 @@ export default function EditorPage({ id }: { id: string }) {
                     {quiz.questions.length} question
                     {quiz.questions.length > 1 && "s"}
                   </h1>
-                  <Button
-                    variant="outline"
-                    onClick={() => setOpenMetaForm(true)}
-                    className="mt-4 w-full sm:mt-0 sm:hidden sm:w-auto"
-                  >
-                    <span>Paramètres</span>
-                  </Button>
-                  {reorderMode ? (
-                    <div className="flex items-center gap-4">
-                      <Button
-                        onClick={() => {
-                          updateQuestionsOrder({
-                            quizId: id,
-                            questions: reorderedQuestions.map((q, index) => ({
-                              ...q,
-                              order: index,
-                            })),
-                          });
-                        }}
-                        className="mt-2 w-full sm:mt-0 sm:w-auto"
-                        disabled={isReorderingQuestion}
-                      >
-                        <SaveIcon className="mr-2 h-5 w-5" />
-                        <span>Enregistrer</span>
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() => setReorderMode(false)}
-                        className="mt-2 w-full sm:mt-0 sm:w-auto"
-                        disabled={isReorderingQuestion}
-                      >
-                        <span>Annuler</span>
-                      </Button>
-                    </div>
-                  ) : (
+                  <div className="flex flex-col gap-4 sm:flex-row">
                     <Button
-                      onClick={() => setReorderMode(!reorderMode)}
-                      className="mt-2 w-full sm:mt-0 sm:w-auto"
-                      disabled={quiz.questions.length < 2}
+                      variant="outline"
+                      onClick={() => setOpenMetaForm(true)}
+                      className="mt-4 w-full sm:mt-0 sm:hidden sm:w-auto"
                     >
-                      <PlusIcon className="mr-2 h-5 w-5" />
-                      <span>Modifier l&apos;ordre des questions</span>
+                      <span>Paramètres</span>
                     </Button>
-                  )}
+                    {reorderMode ? (
+                      <div className="flex items-center gap-4">
+                        <Button
+                          onClick={() => {
+                            updateQuestionsOrder({
+                              quizId: id,
+                              questions: reorderedQuestions.map((q, index) => ({
+                                ...q,
+                                order: index,
+                              })),
+                            });
+                          }}
+                          className="w-full sm:mt-0 sm:w-auto"
+                          disabled={isReorderingQuestion}
+                        >
+                          <SaveIcon className="mr-2 h-5 w-5" />
+                          <span>Enregistrer</span>
+                        </Button>
+                        <Button
+                          variant="outline"
+                          onClick={() => setReorderMode(false)}
+                          className="w-full sm:mt-0 sm:w-auto"
+                          disabled={isReorderingQuestion}
+                        >
+                          <span>Annuler</span>
+                        </Button>
+                      </div>
+                    ) : (
+                      <Button
+                        onClick={() => setReorderMode(!reorderMode)}
+                        className="w-full sm:mt-0 sm:w-auto"
+                        disabled={quiz.questions.length < 2}
+                      >
+                        <PlusIcon className="mr-2 h-5 w-5" />
+                        <span>Modifier l&apos;ordre des questions</span>
+                      </Button>
+                    )}
+                    <Link
+                      href={`/play/${id}`}
+                      className={cn(buttonVariants(), "lg:hidden")}
+                    >
+                      Lancer une partie
+                    </Link>
+                  </div>
                 </div>
               )}
 
