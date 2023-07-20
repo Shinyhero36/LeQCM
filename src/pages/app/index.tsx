@@ -2,7 +2,6 @@ import { useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { SignedIn } from "@clerk/nextjs";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,7 +12,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -36,13 +35,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useToast } from "@/components/ui/use-toast";
 import { EmptyState } from "@/components/empty-state";
 import { LoadingState } from "@/components/loading-state";
-import { NavBar } from "@/components/navbar";
+import { Sidebar } from "@/components/sidebar";
 import { api } from "@/utils/api";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { MoreVerticalIcon, PlusIcon } from "lucide-react";
+import { MenuIcon, MoreVerticalIcon, PlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -51,6 +51,7 @@ export default function Home() {
   const { toast } = useToast();
 
   const [openCreateModal, setOpenCreateModal] = useState(false);
+  const [openSheet, setOpenSheet] = useState(false);
   const [openDeleteQuizModal, setOpenDeleteQuizModal] = useState(false);
   const [quizToDelete, setQuizToDelete] = useState<string | null>(null);
 
@@ -84,7 +85,6 @@ export default function Home() {
     if (!quizzes || quizzes.length === 0)
       return (
         <EmptyState
-          className="mt-6"
           title="Aucun quiz"
           description="Vous n'avez pas encore créé de quiz."
           actions={
@@ -129,34 +129,31 @@ export default function Home() {
             </AlertDialogContent>
           </AlertDialog>
         )}
-        <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {quizzes.map((quiz) => (
-            <div key={quiz.id}>
-              <div className="flex flex-col overflow-hidden rounded-lg border shadow-md">
-                {/* Image placeholder */}
-                <Link
-                  href={`/editor/${quiz.id}`}
-                  className="relative aspect-video h-full w-full bg-black"
-                >
-                  {/* Question count */}
-                  <div className="bg-cod-500 absolute right-0 top-0 m-4 rounded px-2 py-1">
-                    <span className="text-sm font-medium text-white">
-                      {quiz.questions.length} question
-                      {quiz.questions.length > 1 && "s"}
-                    </span>
-                  </div>
-                </Link>
-                {/* Fake info */}
-                <div className="flex justify-between px-6 py-4">
+            <Link
+              href={`/app/quiz/${quiz.id}/edit`}
+              key={quiz.id}
+              className="group"
+            >
+              <div className="flex flex-col overflow-hidden rounded-lg border px-6 py-4 transition-colors group-hover:border-stone-500">
+                <div className="flex justify-between">
                   <div>
                     <h3 className="text-lg font-medium">{quiz.name}</h3>
-                    <p className="text-cod-700 text-sm">
-                      {quiz.description ?? "Pas de description"}
+                    <p className="text-stone-700">
+                      {quiz.questions.length} question
+                      {quiz.questions.length > 1 ? "s" : ""}
                     </p>
                   </div>
+
                   <DropdownMenu>
-                    <DropdownMenuTrigger>
-                      <MoreVerticalIcon />
+                    <DropdownMenuTrigger
+                      className={buttonVariants({
+                        variant: "ghost",
+                        size: "icon",
+                      })}
+                    >
+                      <MoreVerticalIcon className="h-5 w-5" />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
                       <DropdownMenuItem
@@ -170,8 +167,16 @@ export default function Home() {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
+                <p className="mt-6 text-sm text-stone-700">
+                  Dernière modification le{" "}
+                  {quiz.updatedAt.toLocaleDateString("fr-FR", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </>
@@ -187,21 +192,12 @@ export default function Home() {
       .max(50, {
         message: "Le titre ne doit pas dépasser 50 caractères",
       }),
-    description: z
-      .string()
-      .nonempty({
-        message: "La description ne peut pas être vide",
-      })
-      .max(200, {
-        message: "La description ne doit pas dépasser 200 caractères",
-      }),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      description: "",
     },
   });
 
@@ -212,12 +208,40 @@ export default function Home() {
         {/* TODO: Add basic head tags */}
       </Head>
 
-      <div className="min-h-screen">
-        <NavBar />
-        <SignedIn>
-          <main className="mx-auto max-w-7xl px-5 py-6 sm:px-10">
-            <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-              <h2 className="text-3xl font-medium">Dashboard</h2>
+      {/* Sheet */}
+      <Sheet open={openSheet} onOpenChange={setOpenSheet}>
+        <SheetContent className="bg-stone-200">
+          <Sidebar quizzes={quizzes} className="flex w-auto" />
+        </SheetContent>
+      </Sheet>
+
+      <div className="flex h-screen bg-stone-300/25">
+        {/* Fixed sidebar */}
+        <Sidebar quizzes={quizzes} />
+        {/* Content */}
+        <main className="my-2 ml-2 mr-2 flex flex-1 flex-col overflow-scroll rounded-xl bg-white p-8 shadow-lg  md:ml-0 ">
+          {/* Header */}
+          <div className="flex flex-col justify-between space-y-4 md:flex-row md:space-y-0">
+            <div className="flex justify-between">
+              <div className="space-y-1">
+                <h2 className="text-3xl font-semibold tracking-tight">
+                  Mes quiz
+                </h2>
+                <p className="text-sm text-stone-500">
+                  Créez et gérez vos quiz
+                </p>
+              </div>
+
+              <Button
+                variant="ghost"
+                onClick={() => setOpenSheet(!openSheet)}
+                className="inline-flex md:hidden"
+              >
+                <MenuIcon className="h-8 w-8" />
+              </Button>
+            </div>
+
+            <div className="flex space-x-2">
               <Dialog
                 open={openCreateModal}
                 onOpenChange={(open) => {
@@ -228,9 +252,9 @@ export default function Home() {
                 }}
               >
                 <DialogTrigger asChild>
-                  <Button className="gap-2">
+                  <Button className="w-full gap-2 sm:w-auto">
                     <PlusIcon className="h-5 w-5" />
-                    Créer un nouveau quiz
+                    Créer un quiz
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
@@ -258,19 +282,6 @@ export default function Home() {
                           </FormItem>
                         )}
                       />
-                      <FormField
-                        control={form.control}
-                        name="description"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Description</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
                       <Button type="submit" disabled={isCreating}>
                         Créer
                       </Button>
@@ -279,9 +290,11 @@ export default function Home() {
                 </DialogContent>
               </Dialog>
             </div>
-            <QuizCards />
-          </main>
-        </SignedIn>
+          </div>
+          <hr className="my-6 h-[1px] w-full shrink-0 bg-border" />
+          {/* Quizzes */}
+          <QuizCards />
+        </main>
       </div>
     </>
   );

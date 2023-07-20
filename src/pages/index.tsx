@@ -46,7 +46,7 @@ export default function Home() {
                   <NavItem href="/">Acceuil</NavItem>
                 </li>
                 <li>
-                  <NavItem href="/about">A Propos</NavItem>
+                  <NavItem href="#">A Propos</NavItem>
                 </li>
                 <li>
                   <NavItem href="https://clubinfo.insat.fr" target="_blank">
@@ -56,7 +56,7 @@ export default function Home() {
               </ul>
             </div>
 
-            <Link href="/dashboard" className={cn(buttonVariants(), "mr-3")}>
+            <Link href="/app" className={cn(buttonVariants(), "mr-3")}>
               Dashboard
             </Link>
           </div>
@@ -82,7 +82,7 @@ export default function Home() {
               <div className="mt-12 flex flex-col justify-center gap-3 sm:flex-row">
                 <Link
                   className={cn(buttonVariants({ size: "xl" }), "text-base")}
-                  href="/dashboard"
+                  href="/app"
                 >
                   Crée un quiz
                 </Link>

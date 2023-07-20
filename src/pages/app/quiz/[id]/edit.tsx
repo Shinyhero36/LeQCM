@@ -5,19 +5,20 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type Proposition, type Question } from "@prisma/client";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useToast } from "@/components/ui/use-toast";
 import { CreateQuestionDialog } from "@/components/create-question-dialog";
 import { EditQuestionDialog } from "@/components/edit-question-dialog";
 import { EmptyState } from "@/components/empty-state";
 import { LoadingState } from "@/components/loading-state";
-import { Logo } from "@/components/logo";
 import { QuestionCard } from "@/components/question-card";
 import { QuestionDndCard } from "@/components/question-dnd-card";
 import { QuizMetadataCard } from "@/components/quiz-metadata";
+import { Sidebar } from "@/components/sidebar";
 import { cn } from "@/lib/utils";
 import { generateSSGHelper } from "@/server/helpers/ssgHelper";
 import { api } from "@/utils/api";
-import { LogOutIcon, PlusIcon, SaveIcon } from "lucide-react";
+import { MenuIcon, PlusIcon, SaveIcon } from "lucide-react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 type FullQuestion = Question & {
@@ -27,9 +28,9 @@ type FullQuestion = Question & {
 const MAX_QUESTIONS = 999;
 
 export default function EditorPage({ id }: { id: string }) {
-  const router = useRouter();
   const { toast } = useToast();
 
+  const [openSheet, setOpenSheet] = useState(false);
   const [reorderMode, setReorderMode] = useState(false);
   const [reorderedQuestions, setReorderedQuestions] = useState<FullQuestion[]>(
     []
@@ -75,8 +76,6 @@ export default function EditorPage({ id }: { id: string }) {
 
     return result;
   };
-
-  const goBackToDashboard = () => router.push("/dashboard");
 
   useEffect(() => {
     if (quiz && !reorderMode) {
@@ -140,7 +139,7 @@ export default function EditorPage({ id }: { id: string }) {
           </Droppable>
         </DragDropContext>
       );
-    } else if (quiz) {
+    } else if (quiz && quiz.questions.length > 0) {
       return (
         <div className="space-y-5">
           {quiz.questions.map((question, index) => (
@@ -217,84 +216,111 @@ export default function EditorPage({ id }: { id: string }) {
           quizId={id}
         />
       )}
-      <div className="min-h-screen">
-        <nav className="min-h-16 fixed z-40 flex w-full items-center justify-between border-b bg-white p-4">
-          <Logo theme="light" />
-          <Button className="gap-2" onClick={goBackToDashboard}>
-            <LogOutIcon className="h-5 w-5" />
-            <span>Dashboard</span>
-          </Button>
-        </nav>
-        <main className="mx-auto max-w-7xl px-5 py-6 pt-24 sm:px-10">
-          <div className="grid gap-5 lg:grid-cols-12">
-            <div className="col-span-8">
-              {quiz && (
-                <div className="mb-5 items-center justify-between sm:flex">
-                  <h1 className="text-3xl font-semibold">
-                    {quiz.questions.length} question
-                    {quiz.questions.length > 1 && "s"}
-                  </h1>
-                  <div className="flex flex-col gap-4 sm:flex-row">
+
+      {/* Sheet */}
+      <Sheet open={openSheet} onOpenChange={setOpenSheet}>
+        <SheetContent className="bg-stone-200">
+          <Sidebar className="flex w-auto" />
+        </SheetContent>
+      </Sheet>
+
+      <div className="flex h-screen bg-stone-300/25">
+        {/* Fixed sidebar */}
+        <Sidebar />
+        {/* Content */}
+        <main className="my-2 ml-2 mr-2 flex flex-1 flex-col overflow-scroll rounded-xl bg-white p-8 shadow-lg md:ml-0">
+          {/* Header */}
+          <div className="flex flex-col justify-between space-y-4 lg:flex-row lg:space-y-0">
+            <div className="flex justify-between">
+              <div className="space-y-1">
+                <h2 className="text-3xl font-semibold tracking-tight">
+                  {quiz?.name}
+                </h2>
+                <p className="text-sm text-stone-500">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                </p>
+              </div>
+
+              <Button
+                variant="ghost"
+                onClick={() => setOpenSheet(!openSheet)}
+                className="inline-flex md:hidden"
+              >
+                <MenuIcon className="h-8 w-8" />
+              </Button>
+            </div>
+
+            {/* Actions */}
+            {quiz && (
+              <div className="flex flex-col gap-4 sm:flex-row">
+                {!reorderMode && (
+                  <Button
+                    variant="outline"
+                    onClick={() => setOpenMetaForm(true)}
+                    className="mt-4 w-full sm:mt-0 sm:w-auto lg:hidden"
+                  >
+                    <span>Paramètres</span>
+                  </Button>
+                )}
+                {reorderMode ? (
+                  <div className="flex items-center gap-4">
+                    <Button
+                      onClick={() => {
+                        updateQuestionsOrder({
+                          quizId: id,
+                          questions: reorderedQuestions.map((q, index) => ({
+                            ...q,
+                            order: index,
+                          })),
+                        });
+                      }}
+                      className="w-full sm:mt-0 sm:w-auto"
+                      disabled={isReorderingQuestion}
+                    >
+                      <SaveIcon className="mr-2 h-5 w-5" />
+                      <span>Enregistrer</span>
+                    </Button>
                     <Button
                       variant="outline"
-                      onClick={() => setOpenMetaForm(true)}
-                      className="mt-4 w-full sm:mt-0 sm:hidden sm:w-auto"
+                      onClick={() => setReorderMode(false)}
+                      className="w-full sm:mt-0 sm:w-auto"
+                      disabled={isReorderingQuestion}
                     >
-                      <span>Paramètres</span>
+                      <span>Annuler</span>
                     </Button>
-                    {reorderMode ? (
-                      <div className="flex items-center gap-4">
-                        <Button
-                          onClick={() => {
-                            updateQuestionsOrder({
-                              quizId: id,
-                              questions: reorderedQuestions.map((q, index) => ({
-                                ...q,
-                                order: index,
-                              })),
-                            });
-                          }}
-                          className="w-full sm:mt-0 sm:w-auto"
-                          disabled={isReorderingQuestion}
-                        >
-                          <SaveIcon className="mr-2 h-5 w-5" />
-                          <span>Enregistrer</span>
-                        </Button>
-                        <Button
-                          variant="outline"
-                          onClick={() => setReorderMode(false)}
-                          className="w-full sm:mt-0 sm:w-auto"
-                          disabled={isReorderingQuestion}
-                        >
-                          <span>Annuler</span>
-                        </Button>
-                      </div>
-                    ) : (
-                      <Button
-                        onClick={() => setReorderMode(!reorderMode)}
-                        className="w-full sm:mt-0 sm:w-auto"
-                        disabled={quiz.questions.length < 2}
-                      >
-                        <PlusIcon className="mr-2 h-5 w-5" />
-                        <span>Modifier l&apos;ordre des questions</span>
-                      </Button>
-                    )}
-                    <Link
-                      href={quiz.questions.length > 0 ? `/play/${id}` : "#"}
-                      className={cn(buttonVariants(), "lg:hidden", {
-                        "cursor-not-allowed opacity-50":
-                          quiz.questions.length === 0,
-                      })}
-                    >
-                      Lancer une partie
-                    </Link>
                   </div>
-                </div>
-              )}
+                ) : (
+                  <Button
+                    variant="outline"
+                    onClick={() => setReorderMode(!reorderMode)}
+                    className="w-full sm:mt-0 sm:w-auto"
+                    disabled={quiz.questions.length < 2}
+                  >
+                    <span>Modifier l&apos;ordre</span>
+                  </Button>
+                )}
+                {!reorderMode && (
+                  <Link
+                    href={quiz.questions.length > 0 ? `/play/${id}` : "#"}
+                    className={cn(buttonVariants(), "lg:hidden", {
+                      "cursor-not-allowed opacity-50":
+                        quiz.questions.length === 0,
+                    })}
+                  >
+                    Lancer une partie
+                  </Link>
+                )}
+              </div>
+            )}
+          </div>
 
+          <hr className="my-6 h-[1px] w-full shrink-0 bg-border" />
+
+          <div className="grid gap-5 lg:grid-cols-12">
+            <div className="col-span-8">
               <Cards />
             </div>
-            <div className="sticky top-24 col-span-4 hidden self-start lg:block">
+            <div className="sticky top-0 col-span-4 hidden self-start lg:block">
               {quiz && (
                 <QuizMetadataCard
                   quiz={quiz}

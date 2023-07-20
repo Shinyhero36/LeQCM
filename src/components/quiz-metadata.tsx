@@ -41,14 +41,6 @@ export const QuizMetadataCard = ({
     name: z.string().nonempty("Le titre ne peux pas être vide").max(50, {
       message: "Le titre ne peux pas dépasser 50 caractères",
     }),
-    description: z
-      .string()
-      .nonempty({
-        message: "La description ne peut pas être vide",
-      })
-      .max(200, {
-        message: "La description ne doit pas dépasser 200 caractères",
-      }),
     timeToAnswer: z
       .number({
         invalid_type_error: "Le temps doit être un nombre",
@@ -66,7 +58,6 @@ export const QuizMetadataCard = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: quiz.name,
-      description: quiz.description ? quiz.description : undefined,
       timeToAnswer: quiz.timeToAnswer,
     },
   });
@@ -80,23 +71,19 @@ export const QuizMetadataCard = ({
       setOpen(false);
       form.reset({
         name: undefined,
-        description: undefined,
         timeToAnswer: undefined,
       });
     },
   });
 
   return (
-    <div className="rounded-lg border border-gray-300 bg-white shadow">
+    <div className="rounded-lg border border-gray-300 bg-white">
       <div className="p-6">
         {/* Image placeholder */}
-        <div className="aspect-video h-52 max-w-full rounded-lg bg-black"></div>
+        <div className="h-52 w-full rounded-lg bg-black"></div>
         <div className="mt-4 flex">
           <div className="flex-grow">
             <p className="text-xl font-medium">{quiz.name}</p>
-            <p className="mt-1 text-sm text-gray-700">
-              {quiz.description ?? "Pas de description"}
-            </p>
           </div>
           <Dialog
             open={open}
@@ -132,19 +119,6 @@ export const QuizMetadataCard = ({
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Nom</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="description"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Description</FormLabel>
                         <FormControl>
                           <Input {...field} />
                         </FormControl>

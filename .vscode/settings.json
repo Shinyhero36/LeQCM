@@ -1,0 +1,12 @@
+{
+  "discord.enabled": true,
+  "discord.removeDetails": false,
+  "discord.removeTimestamp": true,
+  "discord.removeRemoteRepository": true,
+  "discord.lowerDetailsEditing": "{workspace}@{git_branch}",
+  "conventionalCommits.scopes": [
+    "prisma",
+    "git"
+  ],
+  "discord.suppressNotifications": true
+}
