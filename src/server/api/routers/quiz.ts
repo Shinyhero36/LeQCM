@@ -9,11 +9,10 @@ export const quizRouter = createTRPCRouter({
     .input(
       z.object({
         name: z.string().nonempty().max(50),
-        description: z.string().max(200),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { name, description } = input;
+      const { name } = input;
       const quizzesName = await ctx.prisma.quiz.findMany({
         where: { name, creator: ctx.userId },
       });
@@ -28,7 +27,6 @@ export const quizRouter = createTRPCRouter({
       const quiz = await ctx.prisma.quiz.create({
         data: {
           name,
-          description,
           creator: ctx.userId,
           questions: {
             create: [],
@@ -108,7 +106,6 @@ export const quizRouter = createTRPCRouter({
       z.object({
         id: z.string().nonempty(),
         name: z.string().nonempty(),
-        description: z.string().nonempty(),
         timeToAnswer: z.number().positive(),
       })
     )
@@ -119,7 +116,6 @@ export const quizRouter = createTRPCRouter({
         },
         data: {
           name: input.name,
-          description: input.description,
           timeToAnswer: input.timeToAnswer,
         },
       });

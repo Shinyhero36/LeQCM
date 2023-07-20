@@ -18,7 +18,6 @@ model Quiz {
   updatedAt    DateTime   @updatedAt
   creator      String
   name         String
-  description  String?
   questions    Question[]
   timeToAnswer Int // in seconds
 
