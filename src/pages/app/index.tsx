@@ -186,6 +186,7 @@ export default function Home() {
   const formSchema = z.object({
     name: z
       .string()
+      .trim()
       .nonempty({
         message: "Le titre ne peut pas être vide",
       })

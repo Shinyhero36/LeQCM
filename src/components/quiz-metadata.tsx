@@ -38,7 +38,7 @@ export const QuizMetadataCard = ({
   startable,
 }: QuizMetadataCardProps) => {
   const formSchema = z.object({
-    name: z.string().nonempty("Le titre ne peux pas être vide").max(50, {
+    name: z.string().trim().nonempty("Le titre ne peux pas être vide").max(50, {
       message: "Le titre ne peux pas dépasser 50 caractères",
     }),
     timeToAnswer: z

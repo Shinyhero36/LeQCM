@@ -21,6 +21,7 @@ export default function JoinPage() {
       .string({
         errorMap: () => ({ message: "Le code PIN est requis" }),
       })
+      .trim()
       .length(6, "Le code doit contenir 6 chiffres"),
   });
 
