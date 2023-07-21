@@ -2,7 +2,17 @@ import { useEffect, useState } from "react";
 import { type GetStaticProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { type Proposition, type Question } from "@prisma/client";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useToast } from "@/components/ui/use-toast";
@@ -28,6 +38,7 @@ const MAX_QUESTIONS = 999;
 
 export default function EditorPage({ id }: { id: string }) {
   const { toast } = useToast();
+  const router = useRouter();
 
   const [openSheet, setOpenSheet] = useState(false);
   const [reorderMode, setReorderMode] = useState(false);
@@ -42,6 +53,7 @@ export default function EditorPage({ id }: { id: string }) {
       })
     | null
   >(null);
+  const [openDeleteQuizModal, setOpenDeleteQuizModal] = useState(false);
 
   const ctx = api.useContext();
   const { data: quiz, isLoading: isLoadingQuiz } =
@@ -61,6 +73,17 @@ export default function EditorPage({ id }: { id: string }) {
           title: "Erreur",
           description: "Impossible de réordonner les questions",
         });
+      },
+    });
+  const { mutate: deleteQuiz, isLoading: isDeleting } =
+    api.quiz.delete.useMutation({
+      onSuccess: async () => {
+        toast({
+          title: "Quiz supprimé",
+          description: "Le quiz a été supprimé avec succès",
+        });
+        await ctx.quiz.getAllFromUser.invalidate();
+        await router.push("/app");
       },
     });
 
@@ -223,6 +246,30 @@ export default function EditorPage({ id }: { id: string }) {
         </SheetContent>
       </Sheet>
 
+      {/* Alert Dialog when deleting a quiz */}
+      <AlertDialog
+        open={openDeleteQuizModal}
+        onOpenChange={setOpenDeleteQuizModal}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Êtes-vous sûr de vouloir supprimer ce quiz ?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Une fois supprimé il n&apos;est pas possible de faire machine
+              arrière.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Annuler</AlertDialogCancel>
+            <Button onClick={() => deleteQuiz({ id })} disabled={isDeleting}>
+              Oui, supprimer
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <div className="flex h-screen bg-stone-300/25">
         {/* Fixed sidebar */}
         <Sidebar />
@@ -251,7 +298,7 @@ export default function EditorPage({ id }: { id: string }) {
 
             {/* Actions */}
             {quiz && (
-              <div className="flex flex-col gap-4 sm:flex-row">
+              <div className="flex flex-col flex-wrap gap-4 sm:flex-row">
                 {!reorderMode && (
                   <Button
                     variant="outline"
@@ -289,14 +336,23 @@ export default function EditorPage({ id }: { id: string }) {
                     </Button>
                   </div>
                 ) : (
-                  <Button
-                    variant="outline"
-                    onClick={() => setReorderMode(!reorderMode)}
-                    className="w-full sm:mt-0 sm:w-auto"
-                    disabled={quiz.questions.length < 2}
-                  >
-                    <span>Modifier l&apos;ordre</span>
-                  </Button>
+                  <>
+                    <Button
+                      variant="outline"
+                      onClick={() => setReorderMode(!reorderMode)}
+                      className="w-full sm:mt-0 sm:w-auto"
+                      disabled={quiz.questions.length < 2}
+                    >
+                      <span>Modifier l&apos;ordre</span>
+                    </Button>
+                    <Button
+                      onClick={() => setOpenDeleteQuizModal(true)}
+                      variant="outline"
+                      className="border-red-500 text-red-500 hover:bg-red-100 hover:text-red-500"
+                    >
+                      Supprimer
+                    </Button>
+                  </>
                 )}
                 {!reorderMode && (
                   <Link

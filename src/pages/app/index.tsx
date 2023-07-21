@@ -2,17 +2,7 @@ import { useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -20,12 +10,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   Form,
   FormControl,
@@ -42,7 +26,7 @@ import { LoadingState } from "@/components/loading-state";
 import { Sidebar } from "@/components/sidebar";
 import { api } from "@/utils/api";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { MenuIcon, MoreVerticalIcon, PlusIcon } from "lucide-react";
+import { MenuIcon, PlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -52,8 +36,6 @@ export default function Home() {
 
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [openSheet, setOpenSheet] = useState(false);
-  const [openDeleteQuizModal, setOpenDeleteQuizModal] = useState(false);
-  const [quizToDelete, setQuizToDelete] = useState<string | null>(null);
 
   const { data: quizzes, isLoading } = api.quiz.getAllFromUser.useQuery();
   const ctx = api.useContext();
@@ -72,13 +54,6 @@ export default function Home() {
         });
       },
     });
-  const { mutate: deleteQuiz } = api.quiz.delete.useMutation({
-    onSuccess: async () => {
-      await ctx.quiz.getAllFromUser.invalidate();
-      setOpenDeleteQuizModal(false);
-      setQuizToDelete(null);
-    },
-  });
 
   const QuizCards = () => {
     if (isLoading) return <LoadingState />;
@@ -103,32 +78,6 @@ export default function Home() {
       );
     return (
       <>
-        {quizToDelete && (
-          <AlertDialog
-            open={openDeleteQuizModal}
-            onOpenChange={setOpenDeleteQuizModal}
-          >
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>
-                  Êtes-vous sûr de vouloir supprimer ce quiz ?
-                </AlertDialogTitle>
-                <AlertDialogDescription>
-                  Une fois supprimé il n&apos;est pas possible de faire machine
-                  arrière.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Annuler</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={() => deleteQuiz({ id: quizToDelete })}
-                >
-                  Oui, supprimer
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        )}
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {quizzes.map((quiz) => (
             <Link
@@ -145,27 +94,6 @@ export default function Home() {
                       {quiz.questions.length > 1 ? "s" : ""}
                     </p>
                   </div>
-
-                  <DropdownMenu>
-                    <DropdownMenuTrigger
-                      className={buttonVariants({
-                        variant: "ghost",
-                        size: "icon",
-                      })}
-                    >
-                      <MoreVerticalIcon className="h-5 w-5" />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuItem
-                        onClick={() => {
-                          setQuizToDelete(quiz.id);
-                          setOpenDeleteQuizModal(true);
-                        }}
-                      >
-                        Supprimer
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
                 </div>
                 <p className="mt-6 text-sm text-stone-700">
                   Dernière modification le{" "}
