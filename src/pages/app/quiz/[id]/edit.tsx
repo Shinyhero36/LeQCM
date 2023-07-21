@@ -301,7 +301,9 @@ export default function EditorPage({ id }: { id: string }) {
                 )}
                 {!reorderMode && (
                   <Link
-                    href={quiz.questions.length > 0 ? `/play/${id}` : "#"}
+                    href={
+                      quiz.questions.length > 0 ? `/app/quiz/${id}/play` : "#"
+                    }
                     className={cn(buttonVariants(), "lg:hidden", {
                       "cursor-not-allowed opacity-50":
                         quiz.questions.length === 0,

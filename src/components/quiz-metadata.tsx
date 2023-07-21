@@ -169,7 +169,7 @@ export const QuizMetadataCard = ({
       </div>
       <div className="px-6 pb-6">
         <Link
-          href={`/play/${quiz.id}`}
+          href={`/app/quiz/${quiz.id}/play`}
           className={cn(buttonVariants(), "w-full", {
             "pointer-events-none opacity-50": !startable,
           })}

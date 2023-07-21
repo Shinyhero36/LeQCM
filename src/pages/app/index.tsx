@@ -62,7 +62,7 @@ export default function Home() {
       onSuccess: async (data) => {
         await ctx.quiz.getAllFromUser.invalidate();
         setOpenCreateModal(false);
-        await router.push(`/editor/${data.id}`);
+        await router.push(`/app/quiz/${data.id}/edit`);
       },
       onError: (error) => {
         toast({
