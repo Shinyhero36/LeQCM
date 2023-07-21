@@ -8,7 +8,7 @@ export const quizRouter = createTRPCRouter({
   create: privateProcedure
     .input(
       z.object({
-        name: z.string().nonempty().max(50),
+        name: z.string().trim().nonempty().max(50),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -105,7 +105,7 @@ export const quizRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.string().nonempty(),
-        name: z.string().nonempty(),
+        name: z.string().trim().nonempty(),
         timeToAnswer: z.number().positive(),
       })
     )
@@ -126,10 +126,10 @@ export const quizRouter = createTRPCRouter({
     .input(
       z.object({
         quizId: z.string().nonempty(),
-        question: z.string().nonempty(),
+        question: z.string().trim().nonempty(),
         propositions: z
           .object({
-            proposition: z.string().min(1).max(120),
+            proposition: z.string().trim().min(1).max(120),
             isCorrect: z.boolean(),
           })
           .array()
@@ -298,10 +298,10 @@ export const quizRouter = createTRPCRouter({
       z.object({
         quizId: z.string().nonempty(),
         questionId: z.string().nonempty(),
-        question: z.string().nonempty(),
+        question: z.string().trim().nonempty(),
         propositions: z
           .object({
-            proposition: z.string().min(1).max(120),
+            proposition: z.string().trim().min(1).max(120),
             isCorrect: z.boolean(),
           })
           .array()

@@ -47,11 +47,15 @@ export const EditQuestionDialog = ({
 }: EditQuestionDialogProps) => {
   const formSchema = z
     .object({
-      question: z.string().nonempty("Une question ne peut pas être vide"),
+      question: z
+        .string()
+        .trim()
+        .nonempty("Une question ne peut pas être vide"),
       propositions: z
         .object({
           proposition: z
             .string()
+            .trim()
             .min(1, "La proposition ne peux pas être vide")
             .max(120, "Max 120 caractères"),
           isCorrect: z.boolean(),

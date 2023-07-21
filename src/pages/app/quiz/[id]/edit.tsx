@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { type GetStaticProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { type Proposition, type Question } from "@prisma/client";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
