@@ -86,15 +86,11 @@ export default function Home() {
               className="group"
             >
               <div className="flex flex-col overflow-hidden rounded-lg border px-6 py-4 transition-colors group-hover:border-stone-500">
-                <div className="flex justify-between">
-                  <div>
-                    <h3 className="text-lg font-medium">{quiz.name}</h3>
-                    <p className="text-stone-700">
-                      {quiz.questions.length} question
-                      {quiz.questions.length > 1 ? "s" : ""}
-                    </p>
-                  </div>
-                </div>
+                <h3 className="text-lg font-medium">{quiz.name}</h3>
+                <p className="text-stone-700">
+                  {quiz.questions.length} question
+                  {quiz.questions.length > 1 ? "s" : ""}
+                </p>
                 <p className="mt-6 text-sm text-stone-700">
                   Dernière modification le{" "}
                   {quiz.updatedAt.toLocaleDateString("fr-FR", {
