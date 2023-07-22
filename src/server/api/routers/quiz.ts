@@ -13,17 +13,6 @@ export const quizRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const { name } = input;
-      const quizzesName = await ctx.prisma.quiz.findMany({
-        where: { name, creator: ctx.userId },
-      });
-
-      if (quizzesName.length > 0) {
-        throw new TRPCError({
-          code: "CONFLICT",
-          message: "Un quiz avec ce nom existe déjà",
-        });
-      }
-
       const quiz = await ctx.prisma.quiz.create({
         data: {
           name,
@@ -44,9 +33,24 @@ export const quizRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const quiz = await ctx.prisma.quiz.delete({
+      const quiz = await ctx.prisma.quiz.findUnique({
         where: {
           id: input.id,
+          creator: ctx.userId,
+        },
+      });
+
+      if (!quiz) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Ce quiz n'existe pas",
+        });
+      }
+
+      await ctx.prisma.quiz.delete({
+        where: {
+          id: input.id,
+          creator: ctx.userId,
         },
       });
 
@@ -79,6 +83,7 @@ export const quizRouter = createTRPCRouter({
       const quiz = await ctx.prisma.quiz.findUnique({
         where: {
           id,
+          creator: ctx.userId,
         },
         include: {
           questions: {
@@ -113,6 +118,7 @@ export const quizRouter = createTRPCRouter({
       const quiz = await ctx.prisma.quiz.update({
         where: {
           id: input.id,
+          creator: ctx.userId,
         },
         data: {
           name: input.name,
@@ -141,6 +147,7 @@ export const quizRouter = createTRPCRouter({
       const quiz = await ctx.prisma.quiz.findUnique({
         where: {
           id: input.quizId,
+          creator: ctx.userId,
         },
         include: {
           questions: {
@@ -182,6 +189,7 @@ export const quizRouter = createTRPCRouter({
       const quiz = await ctx.prisma.quiz.findUnique({
         where: {
           id: input.quizId,
+          creator: ctx.userId,
         },
         include: {
           questions: {
@@ -242,6 +250,7 @@ export const quizRouter = createTRPCRouter({
       const quiz = await ctx.prisma.quiz.findUnique({
         where: {
           id: input.quizId,
+          creator: ctx.userId,
         },
         include: {
           questions: {
@@ -374,6 +383,7 @@ export const quizRouter = createTRPCRouter({
       const quiz = await ctx.prisma.quiz.findUnique({
         where: {
           id: input.quizId,
+          creator: ctx.userId,
         },
       });
 
