@@ -20,8 +20,6 @@ model Quiz {
   name         String
   questions    Question[]
   timeToAnswer Int // in seconds
-
-  @@unique([name, creator])
 }
 
 model Question {

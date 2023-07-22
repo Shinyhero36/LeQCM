@@ -56,8 +56,11 @@ export default function EditorPage({ id }: { id: string }) {
   const [openDeleteQuizModal, setOpenDeleteQuizModal] = useState(false);
 
   const ctx = api.useContext();
-  const { data: quiz, isLoading: isLoadingQuiz } =
-    api.quiz.getFromUser.useQuery({ id });
+  const {
+    data: quiz,
+    isLoading: isLoadingQuiz,
+    isError,
+  } = api.quiz.getFromUser.useQuery({ id });
   const { mutate: updateQuestionsOrder, isLoading: isReorderingQuestion } =
     api.quiz.updateQuestionsOrder.useMutation({
       onSuccess: async () => {
@@ -194,8 +197,6 @@ export default function EditorPage({ id }: { id: string }) {
           </div>
         </div>
       );
-    } else if (isLoadingQuiz) {
-      return <LoadingState />;
     } else {
       return (
         <EmptyState
@@ -275,119 +276,138 @@ export default function EditorPage({ id }: { id: string }) {
         <Sidebar />
         {/* Content */}
         <main className="my-2 ml-2 mr-2 flex flex-1 flex-col overflow-scroll rounded-xl bg-white p-8 shadow-lg md:ml-0">
-          {/* Header */}
-          <div className="flex flex-col justify-between space-y-4 lg:flex-row lg:space-y-0">
-            <div className="flex justify-between">
-              <div className="space-y-1">
-                <h2 className="text-3xl font-semibold tracking-tight">
-                  {quiz?.name}
-                </h2>
-                <p className="text-sm text-stone-500">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                </p>
-              </div>
-
-              <Button
-                variant="ghost"
-                onClick={() => setOpenSheet(!openSheet)}
-                className="inline-flex md:hidden"
-              >
-                <MenuIcon className="h-8 w-8" />
-              </Button>
-            </div>
-
-            {/* Actions */}
-            {quiz && (
-              <div className="flex flex-col flex-wrap gap-4 sm:flex-row">
-                {!reorderMode && (
-                  <Button
-                    variant="outline"
-                    onClick={() => setOpenMetaForm(true)}
-                    className="mt-4 w-full sm:mt-0 sm:w-auto lg:hidden"
-                  >
-                    <span>Paramètres</span>
-                  </Button>
-                )}
-                {reorderMode ? (
-                  <div className="flex items-center gap-4">
-                    <Button
-                      onClick={() => {
-                        updateQuestionsOrder({
-                          quizId: id,
-                          questions: reorderedQuestions.map((q, index) => ({
-                            ...q,
-                            order: index,
-                          })),
-                        });
-                      }}
-                      className="w-full sm:mt-0 sm:w-auto"
-                      disabled={isReorderingQuestion}
-                    >
-                      <SaveIcon className="mr-2 h-5 w-5" />
-                      <span>Enregistrer</span>
-                    </Button>
-                    <Button
-                      variant="outline"
-                      onClick={() => setReorderMode(false)}
-                      className="w-full sm:mt-0 sm:w-auto"
-                      disabled={isReorderingQuestion}
-                    >
-                      <span>Annuler</span>
-                    </Button>
+          {!isLoadingQuiz && !isError && (
+            <>
+              {/* Header */}
+              <div className="flex flex-col justify-between space-y-4 lg:flex-row lg:space-y-0">
+                <div className="flex justify-between">
+                  <div className="space-y-1">
+                    <h2 className="text-3xl font-semibold tracking-tight">
+                      {quiz?.name}
+                    </h2>
+                    <p className="text-sm text-stone-500">
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    </p>
                   </div>
-                ) : (
-                  <>
-                    <Button
-                      variant="outline"
-                      onClick={() => setReorderMode(!reorderMode)}
-                      className="w-full sm:mt-0 sm:w-auto"
-                      disabled={quiz.questions.length < 2}
-                    >
-                      <span>Modifier l&apos;ordre</span>
-                    </Button>
-                    <Button
-                      onClick={() => setOpenDeleteQuizModal(true)}
-                      variant="outline"
-                      className="border-red-500 text-red-500 hover:bg-red-100 hover:text-red-500"
-                    >
-                      Supprimer
-                    </Button>
-                  </>
-                )}
-                {!reorderMode && (
-                  <Link
-                    href={
-                      quiz.questions.length > 0 ? `/app/quiz/${id}/play` : "#"
-                    }
-                    className={cn(buttonVariants(), "lg:hidden", {
-                      "cursor-not-allowed opacity-50":
-                        quiz.questions.length === 0,
-                    })}
+
+                  <Button
+                    variant="ghost"
+                    onClick={() => setOpenSheet(!openSheet)}
+                    className="inline-flex md:hidden"
                   >
-                    Lancer une partie
-                  </Link>
+                    <MenuIcon className="h-8 w-8" />
+                  </Button>
+                </div>
+
+                {/* Actions */}
+                {quiz && (
+                  <div className="flex flex-col flex-wrap gap-4 sm:flex-row">
+                    {!reorderMode && (
+                      <Button
+                        variant="outline"
+                        onClick={() => setOpenMetaForm(true)}
+                        className="mt-4 w-full sm:mt-0 sm:w-auto lg:hidden"
+                      >
+                        <span>Paramètres</span>
+                      </Button>
+                    )}
+                    {reorderMode ? (
+                      <div className="flex items-center gap-4">
+                        <Button
+                          onClick={() => {
+                            updateQuestionsOrder({
+                              quizId: id,
+                              questions: reorderedQuestions.map((q, index) => ({
+                                ...q,
+                                order: index,
+                              })),
+                            });
+                          }}
+                          className="w-full sm:mt-0 sm:w-auto"
+                          disabled={isReorderingQuestion}
+                        >
+                          <SaveIcon className="mr-2 h-5 w-5" />
+                          <span>Enregistrer</span>
+                        </Button>
+                        <Button
+                          variant="outline"
+                          onClick={() => setReorderMode(false)}
+                          className="w-full sm:mt-0 sm:w-auto"
+                          disabled={isReorderingQuestion}
+                        >
+                          <span>Annuler</span>
+                        </Button>
+                      </div>
+                    ) : (
+                      <>
+                        <Button
+                          variant="outline"
+                          onClick={() => setReorderMode(!reorderMode)}
+                          className="w-full sm:mt-0 sm:w-auto"
+                          disabled={quiz.questions.length < 2}
+                        >
+                          <span>Modifier l&apos;ordre</span>
+                        </Button>
+                        <Button
+                          onClick={() => setOpenDeleteQuizModal(true)}
+                          variant="outline"
+                          className="border-red-500 text-red-500 hover:bg-red-100 hover:text-red-500"
+                        >
+                          Supprimer
+                        </Button>
+                      </>
+                    )}
+                    {!reorderMode && (
+                      <Link
+                        href={
+                          quiz.questions.length > 0
+                            ? `/app/quiz/${id}/play`
+                            : "#"
+                        }
+                        className={cn(buttonVariants(), "lg:hidden", {
+                          "cursor-not-allowed opacity-50":
+                            quiz.questions.length === 0,
+                        })}
+                      >
+                        Lancer une partie
+                      </Link>
+                    )}
+                  </div>
                 )}
               </div>
-            )}
-          </div>
 
-          <hr className="my-6 h-[1px] w-full shrink-0 bg-border" />
+              <hr className="my-6 h-[1px] w-full shrink-0 bg-border" />
 
-          <div className="grid gap-5 lg:grid-cols-12">
-            <div className="col-span-8">
-              <Cards />
-            </div>
-            <div className="sticky top-0 col-span-4 hidden self-start lg:block">
-              {quiz && (
-                <QuizMetadataCard
-                  quiz={quiz}
-                  open={openMetaForm}
-                  setOpen={setOpenMetaForm}
-                  startable={quiz.questions.length > 0}
-                />
-              )}
-            </div>
-          </div>
+              <div className="grid gap-5 lg:grid-cols-12">
+                <div className="col-span-8">
+                  <Cards />
+                </div>
+                <div className="sticky top-0 col-span-4 hidden self-start lg:block">
+                  {quiz && (
+                    <QuizMetadataCard
+                      quiz={quiz}
+                      open={openMetaForm}
+                      setOpen={setOpenMetaForm}
+                      startable={quiz.questions.length > 0}
+                    />
+                  )}
+                </div>
+              </div>
+            </>
+          )}
+          {!quiz && isLoadingQuiz && <LoadingState />}
+          {isError && (
+            <EmptyState
+              title="Erreur"
+              description="Impossible de charger le quiz"
+              actions={
+                <Link href="/app" className={cn(buttonVariants())}>
+                  Retour en arrière
+                </Link>
+              }
+              className="h-full"
+            />
+          )}
         </main>
       </div>
     </>
