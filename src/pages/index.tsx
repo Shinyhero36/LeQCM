@@ -73,7 +73,7 @@ export default function Home() {
               </div>
 
               <h1 className="font-display mt-5 text-4xl font-bold text-gray-900 sm:text-5xl lg:text-6xl xl:text-7xl">
-                Une plateforme quiz interactive
+                Une plateforme de quiz interactive
               </h1>
               <p className="mx-auto mt-8 max-w-2xl text-gray-700 sm:text-lg md:text-xl lg:text-2xl ">
                 Le QCM est une plateforme de quiz interactive open-source et
