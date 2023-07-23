@@ -1,10 +1,7 @@
 <div align="center">
   <img src="./public/images/og.png" alt="App screenshot">
   <h1>Le QCM</h1>
-  <p align="center">
-  Un kahoot-like
   <br />
-  <a href="#"></a>
 
   <a href="https://github.com/Shinyhero36/LeQCM/stargazers">
     <img src="https://img.shields.io/github/stars/Shinyhero36/LeQCM?colorA=363a4f&colorB=b7bdf8&style=for-the-badge" />
@@ -38,9 +35,14 @@
 
 ## 💻 Development
 
+### 🐋 Using Docker Compose
+
 Run the development server:
 
 ```bash
+# Install dependencies
+npm run dev
+
 # Build dev
 docker compose -f docker-compose.dev.yml build
 
@@ -50,11 +52,26 @@ docker compose -f docker-compose.dev.yml up
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+### Using local development
+
+Install the dependencies:
+
+```bash
+# Install dependencies
+npm install
+
+# Run the development server:
+npm run dev
+```
+
+
 ## 🚀 Production
+
+### 🐋 Using Docker Compose
 
 Multistage builds are highly recommended in production. Combined with the Next Output Standalone feature, only node_modules files required for production are copied into the final Docker image.
 
-First, run the production server (Final image approximately 110 MB).
+First, run the production server (Final image approximately 226 MB).
 
 ```bash
 # Build prod
@@ -64,17 +81,20 @@ docker compose -f docker-compose.prod.yml build
 docker compose -f docker-compose.prod.yml up
 ```
 
-Alternatively, run the production server without without multistage builds (Final image approximately 1 GB).
+Alternatively, to run the production server without multistage builds you can have a look at the [with-docker-compose](https://github.com/vercel/next.js/tree/canary/examples/with-docker-compose) example in the Next.js repository.
+
+
+### Local
+
+Build for production:
 
 ```bash
-# Build prod without multistage
-docker compose -f docker-compose.prod-without-multistage.yml build
+# Build prod
+npm run build
 
-# Up prod without multistage in detached mode
-docker compose -f docker-compose.prod-without-multistage.yml up -d
+# Run the production server:
+npm run start
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ---
 

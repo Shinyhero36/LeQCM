@@ -5,7 +5,7 @@ services:
     container_name: le-qcm
     build:
       context: ./
-      dockerfile: dev.Dockerfile
+      dockerfile: Dockerfile.dev
 
     # Set environment variables directly in the docker-compose file
     environment:
