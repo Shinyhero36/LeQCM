@@ -90,12 +90,17 @@ Alternatively, to run the production server without multistage builds you can ha
 2. Build the image and run it as a container:
 
 ```bash
-# Build the image (Add the -o flag to change the output directory)
+# Build the image
 docker build -f Dockerfile.prod.image -t leqcm .
 
 # Run the container
 docker run -p 3000:3000 leqcm
 ```
+
+> If your want to save your image in a tar gz archive, you can use the following command:
+> ```bash
+> docker save leqcm:latest | gzip > leqcm.tar.gz
+> ```
 
 ### Local
 
