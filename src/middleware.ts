@@ -9,10 +9,23 @@ type PublicMetadata = {
 export default authMiddleware({
   publicRoutes: ["/", "/og.png"],
   async afterAuth(auth, req) {
+    const headers = new Headers(req.headers);
+    const referer = headers.get("referer");
+    const path = new URL(req.url).pathname;
+
     if (auth.isPublicRoute) return NextResponse.next();
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    if (!auth.userId) return redirectToSignIn({ returnBackUrl: req.url });
+    if (!auth.userId) {
+      if (referer && !path.startsWith("/api")) {
+        const refererURL = new URL(path, referer).href;
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        return redirectToSignIn({ returnBackUrl: refererURL });
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return redirectToSignIn({ returnBackUrl: req.url });
+    }
 
     if (auth.userId) {
       const pubMeta = (await clerkClient.users.getUser(auth.userId))
