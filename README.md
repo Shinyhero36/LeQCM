@@ -84,6 +84,19 @@ docker compose -f docker-compose.prod.yml up
 Alternatively, to run the production server without multistage builds you can have a look at the [with-docker-compose](https://github.com/vercel/next.js/tree/canary/examples/with-docker-compose) example in the Next.js repository.
 
 
+### 🐋 Using Docker Image
+
+1. Remove the `.env` file from `.dockerignore` if you want to use the `.env` file in development.
+2. Build the image and run it as a container:
+
+```bash
+# Build the image (Add the -o flag to change the output directory)
+docker build -f Dockerfile.prod.image -t leqcm .
+
+# Run the container
+docker run -p 3000:3000 leqcm
+```
+
 ### Local
 
 Build for production:
