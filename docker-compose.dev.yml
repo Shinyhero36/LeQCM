@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  le-qcm:
+    container_name: le-qcm
+    build:
+      context: ./
+      dockerfile: dev.Dockerfile
+
+    # Set environment variables directly in the docker-compose file
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+      CLERK_SECRET_KEY: ${CLERK_SECRET_KEY}
+
+    # Set envrionment variables based on the .env file
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    restart: always
+    ports:
+      - 3000:3000
+
+  # Add more containers below (nginx, postgres, etc.)
