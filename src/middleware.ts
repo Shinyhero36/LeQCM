@@ -9,22 +9,17 @@ type PublicMetadata = {
 export default authMiddleware({
   publicRoutes: ["/", "/og.png"],
   async afterAuth(auth, req) {
-    const headers = new Headers(req.headers);
-    const referer = headers.get("referer");
-    const path = new URL(req.url).pathname;
-
+    console.log("Experimental:", req.experimental_clerkUrl);
     if (auth.isPublicRoute) return NextResponse.next();
 
     if (!auth.userId) {
-      if (referer && !path.startsWith("/api")) {
-        const refererURL = new URL(path, referer).href;
-
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        return redirectToSignIn({ returnBackUrl: refererURL });
-      }
-
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return redirectToSignIn({ returnBackUrl: req.url });
+      return redirectToSignIn({
+        /**
+         * @see https://github.com/clerkinc/javascript/issues/1338
+         */
+        returnBackUrl: req.experimental_clerkUrl.href,
+      });
     }
 
     if (auth.userId) {
