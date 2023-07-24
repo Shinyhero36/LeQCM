@@ -10,9 +10,7 @@ export const env = createEnv({
     DATABASE_URL: z.string().url().trim().min(1),
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().trim().min(1),
     CLERK_SECRET_KEY: z.string().trim().min(1),
-    CLERK_TRUST_HOST: z
-      .enum(["false", "true"])
-      .transform((val) => val === "true"),
+    CLERK_TRUST_HOST: z.enum(["false", "true"]),
     NODE_ENV: z.enum(["development", "test", "production"]),
   },
 
