@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
+import { SignInButton, useUser } from "@clerk/nextjs";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Head } from "@/components/head";
 import { Logo } from "@/components/logo";
 import { Phone } from "@/components/phone";
@@ -32,6 +33,8 @@ export const NavItem = ({
 export default function Home() {
   const year = new Date().getFullYear();
 
+  const { user, isLoaded } = useUser();
+
   return (
     <>
       <Head />
@@ -57,13 +60,25 @@ export default function Home() {
               </ul>
             </div>
 
-            <Link
-              href="/app"
-              className={cn(buttonVariants(), "mr-3")}
-              prefetch={false}
-            >
-              Dashboard
-            </Link>
+            {!isLoaded && <div></div>}
+
+            {isLoaded && !user && (
+              <SignInButton redirectUrl="/app" mode="modal">
+                <Button className={cn(buttonVariants(), "mr-3 cursor-pointer")}>
+                  Se connecter
+                </Button>
+              </SignInButton>
+            )}
+
+            {isLoaded && user && (
+              <Link
+                href="/app"
+                className={cn(buttonVariants(), "mr-3")}
+                prefetch={false}
+              >
+                Dashboard
+              </Link>
+            )}
           </div>
         </nav>
         {/* Hero */}
@@ -85,13 +100,28 @@ export default function Home() {
                 gratuite sans paywall.
               </p>
               <div className="mt-12 flex flex-col justify-center gap-3 sm:flex-row">
-                <Link
-                  className={cn(buttonVariants({ size: "xl" }), "text-base")}
-                  href="/app"
-                  prefetch={false}
-                >
-                  Crée un quiz
-                </Link>
+                {!isLoaded && <div></div>}
+                {isLoaded && !user && (
+                  <SignInButton redirectUrl="/app" mode="modal">
+                    <Button
+                      className={cn(
+                        buttonVariants({ size: "xl" }),
+                        "text-base"
+                      )}
+                    >
+                      Se connecter
+                    </Button>
+                  </SignInButton>
+                )}
+                {isLoaded && user && (
+                  <Link
+                    href="/app"
+                    className={cn(buttonVariants({ size: "xl" }), "text-base")}
+                    prefetch={false}
+                  >
+                    Dashboard
+                  </Link>
+                )}
                 <Link
                   className={cn(
                     buttonVariants({ size: "xl", variant: "outline" }),
