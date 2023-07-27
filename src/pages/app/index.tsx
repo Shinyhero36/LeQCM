@@ -84,6 +84,7 @@ export default function Home() {
               href={`/app/quiz/${quiz.id}/edit`}
               key={quiz.id}
               className="group"
+              prefetch={false}
             >
               <div className="flex flex-col overflow-hidden rounded-lg border px-6 py-4 transition-colors group-hover:border-stone-500">
                 <h3 className="text-lg font-medium">{quiz.name}</h3>

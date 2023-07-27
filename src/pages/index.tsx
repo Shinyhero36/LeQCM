@@ -22,6 +22,7 @@ export const NavItem = ({
     )}
     href={href ?? "#"}
     target={target ?? "_self"}
+    prefetch={false}
     {...props}
   >
     {children}
@@ -56,7 +57,11 @@ export default function Home() {
               </ul>
             </div>
 
-            <Link href="/app" className={cn(buttonVariants(), "mr-3")}>
+            <Link
+              href="/app"
+              className={cn(buttonVariants(), "mr-3")}
+              prefetch={false}
+            >
               Dashboard
             </Link>
           </div>
@@ -83,6 +88,7 @@ export default function Home() {
                 <Link
                   className={cn(buttonVariants({ size: "xl" }), "text-base")}
                   href="/app"
+                  prefetch={false}
                 >
                   Crée un quiz
                 </Link>

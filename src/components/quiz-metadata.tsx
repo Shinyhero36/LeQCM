@@ -173,6 +173,7 @@ export const QuizMetadataCard = ({
           className={cn(buttonVariants(), "w-full", {
             "pointer-events-none opacity-50": !startable,
           })}
+          prefetch={false}
         >
           Lancer une partie
         </Link>
