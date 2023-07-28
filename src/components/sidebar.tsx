@@ -53,7 +53,7 @@ export const Sidebar = ({ className, quizzes, ...props }: SidebarProps) => {
                 <span className="ml-2">Dashboard</span>
               </div>
             </Link>
-            <Link href="/settings">
+            <Link href="/app/settings" prefetch={false}>
               <div
                 className={cn(
                   buttonVariants({ variant: "ghost" }),
