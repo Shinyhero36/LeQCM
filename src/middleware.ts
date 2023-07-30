@@ -7,6 +7,7 @@ type PublicMetadata = {
 };
 
 export default authMiddleware({
+  debug: true,
   publicRoutes: ["/", "/og.png"],
   async afterAuth(auth, req) {
     console.log("Experimental:", req.experimental_clerkUrl);
