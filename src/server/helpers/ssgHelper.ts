@@ -7,6 +7,22 @@ import superjson from "superjson";
 export const generateSSGHelper = () =>
   createServerSideHelpers({
     router: appRouter,
-    ctx: { prisma, userId: null },
+    ctx: {
+      prisma,
+      auth: {
+        sessionClaims: null,
+        sessionId: null,
+        session: null,
+        actor: null,
+        userId: null,
+        user: null,
+        orgId: null,
+        orgRole: null,
+        orgSlug: null,
+        organization: null,
+        getToken: () => Promise.resolve(null),
+        debug: () => undefined,
+      },
+    },
     transformer: superjson,
   });
