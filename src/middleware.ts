@@ -10,8 +10,14 @@ export default authMiddleware({
   debug: true,
   publicRoutes: ["/", "/og.png"],
   async afterAuth(auth, req) {
+    const response = NextResponse.next();
     console.log("Experimental:", req.experimental_clerkUrl);
-    if (auth.isPublicRoute) return NextResponse.next();
+    if (auth.isPublicRoute) return response;
+
+    // if (auth.isApiRoute) {
+    if (req.nextUrl.pathname.startsWith("/api")) {
+      response.headers.append("Access-Control-Allow-Origin", "*");
+    }
 
     if (!auth.userId) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
@@ -27,8 +33,7 @@ export default authMiddleware({
       const pubMeta = (await clerkClient.users.getUser(auth.userId))
         .publicMetadata as PublicMetadata;
 
-      if (pubMeta.role === "admin" || pubMeta.isInvited)
-        return NextResponse.next();
+      if (pubMeta.role === "admin" || pubMeta.isInvited) return response;
 
       // TODO: Replace with "/invite" and create the page
       const inviteURL = new URL("/", new URL(req.url).origin);
