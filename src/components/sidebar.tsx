@@ -42,7 +42,7 @@ export const Sidebar = ({ className, quizzes, ...props }: SidebarProps) => {
             Général
           </h2>
           <div className="space-y-1">
-            <Link href="/app">
+            <Link href="/app" prefetch={false}>
               <div
                 className={cn(
                   buttonVariants({ variant: "ghost" }),
@@ -53,7 +53,7 @@ export const Sidebar = ({ className, quizzes, ...props }: SidebarProps) => {
                 <span className="ml-2">Dashboard</span>
               </div>
             </Link>
-            <Link href="/settings">
+            <Link href="/settings" prefetch={false}>
               <div
                 className={cn(
                   buttonVariants({ variant: "ghost" }),
@@ -75,7 +75,11 @@ export const Sidebar = ({ className, quizzes, ...props }: SidebarProps) => {
             </h2>
             <div className="space-y-1">
               {quizzes.map((quiz) => (
-                <Link href={`/app/quiz/${quiz.id}/edit`} key={quiz.id}>
+                <Link
+                  href={`/app/quiz/${quiz.id}/edit`}
+                  key={quiz.id}
+                  prefetch={false}
+                >
                   <div
                     className={cn(
                       buttonVariants({ variant: "ghost" }),

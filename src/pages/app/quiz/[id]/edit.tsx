@@ -368,6 +368,7 @@ export default function EditorPage({ id }: { id: string }) {
                           "cursor-not-allowed opacity-50":
                             quiz.questions.length === 0,
                         })}
+                        prefetch={false}
                       >
                         Lancer une partie
                       </Link>
@@ -401,7 +402,11 @@ export default function EditorPage({ id }: { id: string }) {
               title="Erreur"
               description="Impossible de charger le quiz"
               actions={
-                <Link href="/app" className={cn(buttonVariants())}>
+                <Link
+                  href="/app"
+                  className={cn(buttonVariants())}
+                  prefetch={false}
+                >
                   Retour en arrière
                 </Link>
               }
